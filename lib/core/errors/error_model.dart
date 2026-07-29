@@ -15,15 +15,16 @@ class ErrorModel {
 
   factory ErrorModel.fromJson(Map<String, dynamic> json) {
     final String mainMessage =
-        json['message'] ??
-        json['detail'] ??
-        json['title'] ??
-        'An error occurred';
+        (json['message'] ?? json['detail'] ?? json['title'] ?? '')
+            .toString()
+            .trim();
 
     final List<String> extractedErrors = [];
     final Map<String, List<String>> extractedFieldErrors = {};
 
-    final errors = json['errors'] ?? json['data'];
+    // Only treat explicit `errors` as field/general errors — not `data`
+    // (API uses `data` for payloads, not validation maps).
+    final errors = json['errors'];
 
     if (errors != null) {
       if (errors is Map) {
@@ -44,19 +45,27 @@ class ErrorModel {
           }
         }
       } else if (errors is List) {
-        extractedErrors.addAll(List<String>.from(errors));
-      } else if (errors is String) {
+        extractedErrors.addAll(
+          errors.map((e) => e.toString()).where((e) => e.isNotEmpty),
+        );
+      } else if (errors is String && errors.isNotEmpty) {
         extractedErrors.add(errors);
       }
     }
 
-    if (extractedErrors.isEmpty && mainMessage.isNotEmpty) {
-      extractedErrors.add(mainMessage);
+    final resolvedMessage = mainMessage.isNotEmpty
+        ? mainMessage
+        : (extractedErrors.isNotEmpty
+              ? extractedErrors.first
+              : 'An error occurred');
+
+    if (extractedErrors.isEmpty && resolvedMessage.isNotEmpty) {
+      extractedErrors.add(resolvedMessage);
     }
 
     return ErrorModel(
       statusCode: json['statusCode'] as int? ?? json['status'] as int? ?? 0,
-      message: mainMessage,
+      message: resolvedMessage,
       code: json['code']?.toString(),
       generalErrors: extractedErrors,
       fieldErrors: extractedFieldErrors,

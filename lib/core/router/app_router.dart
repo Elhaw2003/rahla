@@ -1,6 +1,9 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_app/core/di/dependency_injection.dart';
 import 'package:travel_app/features/user/not_found/presentation/pages/not_found_page.dart';
 import 'package:travel_app/features/user/splash/presentation/pages/splash_page.dart';
+import 'package:travel_app/features/user/auth/presentation/cubit/auth_cubit.dart';
 import 'package:travel_app/features/user/auth/presentation/pages/login_page.dart';
 import 'package:travel_app/features/user/auth/presentation/pages/register_page.dart';
 import 'package:travel_app/features/user/home/presentation/pages/home_page.dart';
@@ -29,7 +32,10 @@ class AppRouter {
       ),
       GoRoute(
         path: RouteNames.login,
-        builder: (context, state) => const LoginPage(),
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<AuthCubit>(),
+          child: const LoginPage(),
+        ),
       ),
       GoRoute(
         path: RouteNames.register,

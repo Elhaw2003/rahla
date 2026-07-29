@@ -7,18 +7,19 @@ class ApiInterceptor extends Interceptor {
   ApiInterceptor(this.secureStorage);
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    secureStorage
-        .getToken()
-        .then((token) {
-          if (token != null && token.isNotEmpty) {
-            options.headers['Authorization'] = 'Bearer $token';
-          }
-          handler.next(options);
-        })
-        .catchError((_) {
-          handler.next(options);
-        });
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    options.headers['Content-Type'] = 'application/json';
+    options.headers['Accept-Language'] = 'ar';
+
+    final token = await secureStorage.getAccessToken();
+    if (token != null && token.isNotEmpty) {
+      options.headers['Authorization'] = 'Bearer $token';
+    }
+
+    handler.next(options);
   }
 
   @override

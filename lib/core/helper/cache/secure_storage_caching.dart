@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:travel_app/core/helper/cache/secure_storage_keys.dart';
 
@@ -22,20 +24,40 @@ class SecureStorageCaching {
     await _storage.deleteAll();
   }
 
-  Future<void> saveToken(String token) async {
-    await write(key: SecureStorageKeys.token, value: token);
+  Future<void> saveAccessToken(String token) async {
+    await write(key: SecureStorageKeys.accessToken, value: token);
   }
 
-  Future<String?> getToken() async {
-    return read(key: SecureStorageKeys.token);
+  Future<String?> getAccessToken() async {
+    return read(key: SecureStorageKeys.accessToken);
   }
 
-  Future<void> deleteToken() async {
-    await delete(key: SecureStorageKeys.token);
+  Future<void> saveRefreshToken(String token) async {
+    await write(key: SecureStorageKeys.refreshToken, value: token);
+  }
+
+  Future<String?> getRefreshToken() async {
+    return read(key: SecureStorageKeys.refreshToken);
+  }
+
+  Future<void> saveUser(Map<String, dynamic> user) async {
+    await write(key: SecureStorageKeys.user, value: jsonEncode(user));
+  }
+
+  Future<Map<String, dynamic>?> getUser() async {
+    final value = await read(key: SecureStorageKeys.user);
+    if (value == null || value.isEmpty) return null;
+    return jsonDecode(value) as Map<String, dynamic>;
   }
 
   Future<bool> isLoggedIn() async {
-    final token = await getToken();
+    final token = await getAccessToken();
     return token != null && token.isNotEmpty;
+  }
+
+  Future<void> clearAuthData() async {
+    await delete(key: SecureStorageKeys.accessToken);
+    await delete(key: SecureStorageKeys.refreshToken);
+    await delete(key: SecureStorageKeys.user);
   }
 }

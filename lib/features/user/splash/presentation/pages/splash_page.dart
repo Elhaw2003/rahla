@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:travel_app/core/constants/app_assets.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
+import 'package:travel_app/core/di/dependency_injection.dart';
+import 'package:travel_app/core/helper/cache/secure_storage_caching.dart';
 import 'package:travel_app/core/router/route_names.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
@@ -20,11 +22,33 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        context.go(RouteNames.login);
-      }
-    });
+    _navigateNext();
+  }
+
+  Future<void> _navigateNext() async {
+    await Future.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
+
+    final storage = getIt<SecureStorageCaching>();
+    final isLoggedIn = await storage.isLoggedIn();
+
+    if (!mounted) return;
+
+    if (!isLoggedIn) {
+      context.go(RouteNames.login);
+      return;
+    }
+
+    final user = await storage.getUser();
+    final role = user?['role']?.toString();
+
+    if (!mounted) return;
+
+    if (role == 'admin') {
+      context.go(RouteNames.adminDashboard);
+    } else {
+      context.go(RouteNames.home);
+    }
   }
 
   @override
