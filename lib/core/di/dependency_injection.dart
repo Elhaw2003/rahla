@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:travel_app/core/helper/cache/secure_storage_caching.dart';
 import 'package:travel_app/core/networking/api_consumer.dart';
-import 'package:travel_app/core/networking/api_interceptor.dart';
 import 'package:travel_app/core/networking/dio_consumer.dart';
 import 'package:travel_app/core/networking/dio_factory.dart';
 import 'package:travel_app/core/networking/internet_checker/network_info.dart';
@@ -30,11 +29,8 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoImpl(getIt<InternetConnection>()),
   );
-  getIt.registerLazySingleton<ApiInterceptor>(
-    () => ApiInterceptor(getIt<SecureStorageCaching>()),
-  );
   getIt.registerLazySingleton<Dio>(
-    () => DioFactory.createDio(getIt<ApiInterceptor>()),
+    () => DioFactory.createDio(getIt<SecureStorageCaching>()),
   );
   getIt.registerLazySingleton<ApiConsumer>(
     () => DioConsumer(
