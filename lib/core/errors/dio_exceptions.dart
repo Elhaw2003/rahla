@@ -49,42 +49,42 @@ class DioExceptionHandler {
     switch (statusCode) {
       case 400:
         throw ValidationException(
-          errorModel.message,
+          _preferApiMessage(errorModel),
           errorModel.code,
           errorModel.fieldErrors,
         );
 
       case 401:
         throw AuthException(
-          _authErrorMessage(errorModel),
+          _preferApiMessage(errorModel),
           errorModel.code,
           errorModel.fieldErrors,
         );
 
       case 403:
         throw PermissionException(
-          errorModel.message,
+          _preferApiMessage(errorModel),
           errorModel.code,
           errorModel.fieldErrors,
         );
 
       case 404:
         throw NotFoundException(
-          _notFoundErrorMessage(errorModel),
+          _preferApiMessage(errorModel),
           errorModel.code,
           errorModel.fieldErrors,
         );
 
       case 409:
         throw ValidationException(
-          errorModel.message,
+          _preferApiMessage(errorModel),
           errorModel.code,
           errorModel.fieldErrors,
         );
 
       case 422:
         throw ValidationException(
-          _validationErrorMessage(errorModel),
+          _preferApiMessage(errorModel),
           errorModel.code,
           errorModel.fieldErrors,
         );
@@ -94,14 +94,14 @@ class DioExceptionHandler {
       case 503:
       case 504:
         throw ServerException(
-          errorModel.message,
+          _preferApiMessage(errorModel),
           errorModel.code,
           errorModel.fieldErrors,
         );
 
       default:
         throw ServerException(
-          errorModel.message,
+          _preferApiMessage(errorModel),
           errorModel.code,
           errorModel.fieldErrors,
         );
@@ -127,8 +127,8 @@ ErrorModel parseErrorResponse(dynamic data, int statusCode) {
     );
   }
 
-  if (data is Map<String, dynamic>) {
-    return ErrorModel.fromJson(data);
+  if (data is Map) {
+    return ErrorModel.fromJson(Map<String, dynamic>.from(data));
   }
 
   return ErrorModel(
@@ -138,32 +138,19 @@ ErrorModel parseErrorResponse(dynamic data, int statusCode) {
   );
 }
 
-String _authErrorMessage(ErrorModel errorModel) {
-  switch (errorModel.code) {
-    case 'INVALID_CREDENTIALS':
-      return 'Invalid credentials';
-    case 'UNAUTHENTICATED':
-      return 'Unauthorized';
-    default:
-      return 'Unauthorized';
+/// Prefer API `message` over `code` for UI (snackbar, dialogs, ...).
+String _preferApiMessage(ErrorModel errorModel) {
+  final message = errorModel.message.trim();
+  if (message.isNotEmpty && message != errorModel.code) {
+    return message;
   }
-}
 
-String _validationErrorMessage(ErrorModel errorModel) {
-  if (errorModel.fieldErrors.containsKey('q')) {
-    return 'Search query too long';
+  final fromErrors = errorModel.errorMessage.trim();
+  if (fromErrors.isNotEmpty && fromErrors != errorModel.code) {
+    return fromErrors;
   }
-  return errorModel.errorMessage;
-}
 
-String _notFoundErrorMessage(ErrorModel errorModel) {
-  final message = errorModel.message.toLowerCase();
-  if (message.contains('customer') ||
-      message.contains('عميل') ||
-      errorModel.code == 'NOT_FOUND') {
-    return 'Customer not found';
-  }
-  return 'Customer not found';
+  return getDefaultErrorMessage(errorModel.statusCode);
 }
 
 /// Default Messages
