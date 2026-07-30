@@ -10,8 +10,12 @@ import 'package:travel_app/core/networking/internet_checker/network_info.dart';
 import 'package:travel_app/core/networking/internet_checker/network_info_impl.dart';
 import 'package:travel_app/features/admin/dashboard/data/repo/admin_dashboard_repo.dart';
 import 'package:travel_app/features/admin/dashboard/presentation/cubit/admin_dashboard_cubit.dart';
+import 'package:travel_app/features/admin/trips/data/repo/admin_trip_manager_repo.dart';
 import 'package:travel_app/features/admin/trips/data/repo/admin_trips_repo.dart';
+import 'package:travel_app/features/admin/trips/data/repo/categories_repo.dart';
+import 'package:travel_app/features/admin/trips/presentation/cubit/admin_trip_manager_cubit.dart';
 import 'package:travel_app/features/admin/trips/presentation/cubit/admin_trips_cubit.dart';
+import 'package:travel_app/features/admin/trips/presentation/cubit/categories_cubit.dart';
 import 'package:travel_app/features/user/auth/data/repo/auth_repo.dart';
 import 'package:travel_app/features/user/auth/presentation/cubit/auth_cubit.dart';
 
@@ -68,5 +72,23 @@ Future<void> setupGetIt() async {
   );
   getIt.registerFactory<AdminTripsCubit>(
     () => AdminTripsCubit(adminTripsRepo: getIt<AdminTripsRepo>()),
+  );
+
+  // Features - Categories
+  getIt.registerLazySingleton<CategoriesRepo>(
+    () => CategoriesRepoImpl(apiConsumer: getIt<ApiConsumer>()),
+  );
+  getIt.registerFactory<CategoriesCubit>(
+    () => CategoriesCubit(categoriesRepo: getIt<CategoriesRepo>()),
+  );
+
+  // Features - Admin Trip Manager (add / update / delete)
+  getIt.registerLazySingleton<AdminTripManagerRepo>(
+    () => AdminTripManagerRepoImpl(apiConsumer: getIt<ApiConsumer>()),
+  );
+  getIt.registerFactory<AdminTripManagerCubit>(
+    () => AdminTripManagerCubit(
+      adminTripManagerRepo: getIt<AdminTripManagerRepo>(),
+    ),
   );
 }

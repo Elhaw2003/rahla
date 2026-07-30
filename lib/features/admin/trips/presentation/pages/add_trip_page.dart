@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
+import 'package:travel_app/core/shared/widgets/app_snackbar.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
+import 'package:travel_app/features/admin/trips/data/models/categories_response_model.dart';
+import 'package:travel_app/features/admin/trips/presentation/cubit/categories_cubit.dart';
+import 'package:travel_app/features/admin/trips/presentation/cubit/categories_states.dart';
 import 'package:travel_app/features/admin/trips/presentation/widgets/add_trip_bottom_action_bar.dart';
 import 'package:travel_app/features/admin/trips/presentation/widgets/add_trip_step1_basic_info.dart';
 import 'package:travel_app/features/admin/trips/presentation/widgets/add_trip_step2_price_dates.dart';
@@ -26,8 +31,9 @@ class _AddTripPageState extends State<AddTripPage> {
   // Step 1: Basic Info
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _originController = TextEditingController();
-  final _destinationController = TextEditingController();
+  String? _selectedCategoryId;
+  String? _selectedOrigin;
+  String? _selectedDestination;
 
   // Step 2: Price, Dates & Capacity
   final _priceController = TextEditingController();
@@ -83,8 +89,6 @@ class _AddTripPageState extends State<AddTripPage> {
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
-    _originController.dispose();
-    _destinationController.dispose();
     _priceController.dispose();
     _capacityController.dispose();
     _cancelPolicyController.dispose();
@@ -181,11 +185,38 @@ class _AddTripPageState extends State<AddTripPage> {
   Widget _buildStepContent() {
     switch (_currentStep) {
       case 0:
-        return AddTripStep1BasicInfo(
-          titleController: _titleController,
-          descriptionController: _descriptionController,
-          originController: _originController,
-          destinationController: _destinationController,
+        return BlocConsumer<CategoriesCubit, CategoriesStates>(
+          listener: (context, state) {
+            if (state is CategoriesFailure) {
+              AppSnackbar.showError(context: context, message: state.message);
+            }
+          },
+          builder: (context, state) {
+            final List<CategoryModel> categories = state is CategoriesSuccess
+                ? state.categories
+                : const <CategoryModel>[];
+            final isLoading =
+                state is CategoriesLoading || state is CategoriesInitial;
+
+            return AddTripStep1BasicInfo(
+              titleController: _titleController,
+              descriptionController: _descriptionController,
+              categories: categories,
+              isCategoriesLoading: isLoading,
+              selectedCategoryId: _selectedCategoryId,
+              selectedOrigin: _selectedOrigin,
+              selectedDestination: _selectedDestination,
+              onCategoryChanged: (value) {
+                setState(() => _selectedCategoryId = value);
+              },
+              onOriginChanged: (value) {
+                setState(() => _selectedOrigin = value);
+              },
+              onDestinationChanged: (value) {
+                setState(() => _selectedDestination = value);
+              },
+            );
+          },
         );
       case 1:
         return AddTripStep2PriceDates(

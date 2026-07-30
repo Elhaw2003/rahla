@@ -15,6 +15,7 @@ import 'package:travel_app/features/user/settings/presentation/pages/settings_pa
 import 'package:travel_app/features/admin/dashboard/presentation/cubit/admin_dashboard_cubit.dart';
 import 'package:travel_app/features/admin/dashboard/presentation/pages/admin_dashboard_page.dart';
 import 'package:travel_app/features/admin/trips/presentation/cubit/admin_trips_cubit.dart';
+import 'package:travel_app/features/admin/trips/presentation/cubit/categories_cubit.dart';
 import 'package:travel_app/features/admin/trips/presentation/pages/add_trip_page.dart';
 import 'package:travel_app/features/admin/trips/presentation/pages/admin_trips_page.dart';
 import 'package:travel_app/features/admin/bookings/presentation/pages/admin_bookings_page.dart';
@@ -93,7 +94,10 @@ class AppRouter {
       ),
       GoRoute(
         path: RouteNames.addTrip,
-        builder: (context, state) => const AddTripPage(),
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<CategoriesCubit>()..getCategories(),
+          child: const AddTripPage(),
+        ),
       ),
       GoRoute(
         path: RouteNames.adminBookingDetails,
