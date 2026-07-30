@@ -221,7 +221,12 @@ class _AdminTripsPageState extends State<AdminTripsPage> {
       floatingActionButton: FloatingActionButton(
         tooltip: AppStrings.adminAddTrip,
         backgroundColor: AppColors.primary,
-        onPressed: () => context.push(RouteNames.addTrip),
+        onPressed: () async {
+          final created = await context.push<bool>(RouteNames.addTrip);
+          if (created == true && context.mounted) {
+            context.read<AdminTripsCubit>().getAdminTrips();
+          }
+        },
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
