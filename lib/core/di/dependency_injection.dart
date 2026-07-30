@@ -8,6 +8,8 @@ import 'package:travel_app/core/networking/dio_consumer.dart';
 import 'package:travel_app/core/networking/dio_factory.dart';
 import 'package:travel_app/core/networking/internet_checker/network_info.dart';
 import 'package:travel_app/core/networking/internet_checker/network_info_impl.dart';
+import 'package:travel_app/features/admin/dashboard/data/repo/admin_dashboard_repo.dart';
+import 'package:travel_app/features/admin/dashboard/presentation/cubit/admin_dashboard_cubit.dart';
 import 'package:travel_app/features/user/auth/data/repo/auth_repo.dart';
 import 'package:travel_app/features/user/auth/presentation/cubit/auth_cubit.dart';
 
@@ -48,5 +50,13 @@ Future<void> setupGetIt() async {
   );
   getIt.registerFactory<AuthCubit>(
     () => AuthCubit(authRepo: getIt<AuthRepo>()),
+  );
+
+  // Features - Admin Dashboard
+  getIt.registerLazySingleton<DashboardRepo>(
+    () => DashboardRepoImpl(apiConsumer: getIt<ApiConsumer>()),
+  );
+  getIt.registerFactory<AdminDashboardCubit>(
+    () => AdminDashboardCubit(dashboardRepo: getIt<DashboardRepo>()),
   );
 }

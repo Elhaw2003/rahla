@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
 import 'package:travel_app/core/extensions/widget_extension.dart';
 import 'package:travel_app/core/router/route_names.dart';
 import 'package:travel_app/core/shared/widgets/app_button.dart';
+import 'package:travel_app/core/shared/widgets/app_loading.dart';
+import 'package:travel_app/core/shared/widgets/app_snackbar.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
+import 'package:travel_app/features/admin/dashboard/data/models/admin_dashboard_stats_model.dart';
+import 'package:travel_app/features/admin/dashboard/presentation/cubit/admin_dashboard_cubit.dart';
+import 'package:travel_app/features/admin/dashboard/presentation/cubit/admin_dashboard_states.dart';
 import 'package:travel_app/features/admin/dashboard/presentation/widgets/admin_stat_card.dart';
 
 class AdminDashboardPage extends StatelessWidget {
   const AdminDashboardPage({super.key});
+
+  String _formatNumber(num value) {
+    return NumberFormat('#,###').format(value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,38 +42,91 @@ class AdminDashboardPage extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(AppSizes.p20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildWelcomeCard(),
-              AppSizes.p20.verticalSpace,
-              Text(
-                AppStrings.adminOverview,
-                style: AppTextStyles.titleMedium.copyWith(
-                  fontWeight: FontWeight.bold,
+        child: BlocConsumer<AdminDashboardCubit, AdminDashboardStates>(
+          listener: (context, state) {
+            if (state is AdminDashboardFailure) {
+              AppSnackbar.showError(context: context, message: state.message);
+            }
+          },
+          builder: (context, state) {
+            if (state is AdminDashboardLoading ||
+                state is AdminDashboardInitial) {
+              return const AppLoading();
+            }
+
+            if (state is AdminDashboardFailure) {
+              return Center(
+                child: Padding(
+                  padding: EdgeInsets.all(AppSizes.p24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        state.message,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      AppSizes.p16.verticalSpace,
+                      AppButton(
+                        text: 'إعادة المحاولة',
+                        onPressed: () =>
+                            context.read<AdminDashboardCubit>().getAdminStats(),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              AppSizes.p12.verticalSpace,
-              _buildStatsGrid(context),
-              AppSizes.p24.verticalSpace,
-              Text(
-                AppStrings.adminQuickActions,
-                style: AppTextStyles.titleMedium.copyWith(
-                  fontWeight: FontWeight.bold,
+              );
+            }
+
+            if (state is AdminDashboardSuccess) {
+              final data = state.adminStats.data;
+              return RefreshIndicator(
+                onRefresh: () =>
+                    context.read<AdminDashboardCubit>().getAdminStats(),
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.all(AppSizes.p20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildWelcomeCard(),
+                      AppSizes.p20.verticalSpace,
+                      Text(
+                        AppStrings.adminOverview,
+                        style: AppTextStyles.titleMedium.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      AppSizes.p12.verticalSpace,
+                      _buildStatsGrid(context, data),
+                      AppSizes.p24.verticalSpace,
+                      Text(
+                        AppStrings.adminQuickActions,
+                        style: AppTextStyles.titleMedium.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      AppSizes.p12.verticalSpace,
+                      _buildManagementSection(context),
+                      AppSizes.p24.verticalSpace,
+                      AppButton.outlined(
+                        text: AppStrings.adminSwitchUserMode,
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: AppColors.primary,
+                        ),
+                        onPressed: () => context.go(RouteNames.home),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              AppSizes.p12.verticalSpace,
-              _buildManagementSection(context),
-              AppSizes.p24.verticalSpace,
-              AppButton.outlined(
-                text: AppStrings.adminSwitchUserMode,
-                icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-                onPressed: () => context.go(RouteNames.home),
-              ),
-            ],
-          ),
+              );
+            }
+
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );
@@ -122,39 +186,44 @@ class AdminDashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsGrid(BuildContext context) {
+  Widget _buildStatsGrid(BuildContext context, AdminStatsData? data) {
+    final totalTrips = data?.trips?.totalActiveTrips ?? 0;
+    final totalBookings = data?.bookings?.totalBookings ?? 0;
+    final pendingBookings = data?.bookings?.pendingBookings ?? 0;
+    final totalRevenue = data?.financials?.totalRevenue ?? 0;
+
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: 2,
       crossAxisSpacing: AppSizes.p12,
       mainAxisSpacing: AppSizes.p12,
-      childAspectRatio: 1.4,
+      childAspectRatio: 1.2,
       children: [
         AdminStatCard(
           title: AppStrings.adminTotalTrips,
-          value: '24',
+          value: _formatNumber(totalTrips),
           icon: Icons.card_travel,
           color: AppColors.primary,
           onTap: () => context.push(RouteNames.adminTrips),
         ),
         AdminStatCard(
           title: AppStrings.adminTotalBookings,
-          value: '142',
+          value: _formatNumber(totalBookings),
           icon: Icons.confirmation_number_outlined,
           color: Colors.purple,
           onTap: () => context.push(RouteNames.adminBookings),
         ),
         AdminStatCard(
           title: AppStrings.adminPendingBookings,
-          value: '8',
+          value: _formatNumber(pendingBookings),
           icon: Icons.hourglass_empty,
           color: Colors.orange,
           onTap: () => context.push(RouteNames.adminBookings),
         ),
         AdminStatCard(
           title: AppStrings.adminTotalRevenue,
-          value: '348,500 ج.م',
+          value: '${_formatNumber(totalRevenue)} ${AppStrings.currencyEGP}',
           icon: Icons.attach_money,
           color: Colors.green,
           onTap: () {},
