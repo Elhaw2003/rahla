@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:travel_app/core/constants/app_assets.dart';
+import 'package:intl/intl.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
 import 'package:travel_app/core/router/route_names.dart';
+import 'package:travel_app/core/shared/widgets/app_button.dart';
+import 'package:travel_app/core/shared/widgets/app_loading.dart';
+import 'package:travel_app/core/shared/widgets/app_snackbar.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
+import 'package:travel_app/features/admin/trips/data/models/admin_trips_model.dart';
+import 'package:travel_app/features/admin/trips/presentation/cubit/admin_trips_cubit.dart';
+import 'package:travel_app/features/admin/trips/presentation/cubit/admin_trips_states.dart';
 import 'package:travel_app/features/admin/trips/presentation/widgets/admin_trip_card.dart';
 
 class AdminTripsPage extends StatefulWidget {
@@ -18,57 +25,52 @@ class AdminTripsPage extends StatefulWidget {
 class _AdminTripsPageState extends State<AdminTripsPage> {
   int _selectedFilterIndex = 0;
 
-  final List<Map<String, String>> _allTrips = [
-    {
-      'title': 'شرم الشيخ',
-      'duration': '3 أيام / 2 ليلة',
-      'price': '2,950 ج.م',
-      'status': 'منشورة',
-      'image': AppAssets.homeFeatured,
-      'statusKey': 'published',
-    },
-    {
-      'title': 'الأقصر وأسوان',
-      'duration': '4 أيام / 3 ليلة',
-      'price': '3,750 ج.م',
-      'status': 'منشورة',
-      'image': AppAssets.destLuxor,
-      'statusKey': 'published',
-    },
-    {
-      'title': 'دهب',
-      'duration': '3 أيام / 2 ليلة',
-      'price': '1,850 ج.م',
-      'status': 'منشورة',
-      'image': AppAssets.destDahab,
-      'statusKey': 'published',
-    },
-    {
-      'title': 'الغردقة',
-      'duration': '5 أيام / 4 ليالي',
-      'price': '4,200 ج.م',
-      'status': 'غير منشورة',
-      'image': AppAssets.destHurghada,
-      'statusKey': 'unpublished',
-    },
+  static const _filterStatuses = <String?>[
+    null,
+    'published',
+    'unpublished',
+    'draft',
   ];
 
-  List<Map<String, String>> get _filteredTrips {
-    switch (_selectedFilterIndex) {
-      case 1:
-        return _allTrips
-            .where((trip) => trip['statusKey'] == 'published')
-            .toList();
-      case 2:
-        return _allTrips
-            .where((trip) => trip['statusKey'] == 'unpublished')
-            .toList();
-      case 3:
-        return _allTrips.where((trip) => trip['statusKey'] == 'draft').toList();
-      case 0:
+  String _formatPrice(num price) {
+    return '${NumberFormat('#,###').format(price)} ${AppStrings.currencyEGP}';
+  }
+
+  String _formatDuration(AdminTripModel trip) {
+    final start = DateTime.tryParse(trip.startDate ?? '');
+    final end = DateTime.tryParse(trip.endDate ?? '');
+    if (start == null || end == null) return trip.destination ?? '';
+
+    final days = end.difference(start).inDays;
+    if (days <= 0) return trip.destination ?? '';
+    final nights = days > 0 ? days - 1 : 0;
+    return '$days أيام / $nights ليلة';
+  }
+
+  String _statusLabel(String? status) {
+    switch (status) {
+      case 'published':
+        return AppStrings.adminFilterPublished;
+      case 'unpublished':
+        return AppStrings.adminFilterUnpublished;
+      case 'draft':
+        return AppStrings.adminFilterDraft;
+      case 'cancelled':
+        return 'ملغاة';
       default:
-        return _allTrips;
+        return status ?? '';
     }
+  }
+
+  String _imageUrl(String? path) {
+    if (path == null || path.isEmpty) return '';
+    if (path.startsWith('http')) return path;
+    return 'https://rahala.duckdns.org$path';
+  }
+
+  void _onFilterTap(int index) {
+    setState(() => _selectedFilterIndex = index);
+    context.read<AdminTripsCubit>().updateStatus(_filterStatuses[index]);
   }
 
   @override
@@ -96,7 +98,6 @@ class _AdminTripsPageState extends State<AdminTripsPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // Filter Tabs Bar
             Container(
               decoration: const BoxDecoration(
                 color: AppColors.surface,
@@ -111,59 +112,108 @@ class _AdminTripsPageState extends State<AdminTripsPage> {
                     (index) => _buildFilterTab(
                       label: filterLabels[index],
                       isSelected: _selectedFilterIndex == index,
-                      onTap: () {
-                        setState(() {
-                          _selectedFilterIndex = index;
-                        });
-                      },
+                      onTap: () => _onFilterTap(index),
                     ),
                   ),
                 ),
               ),
             ),
-
-            // Trips List Area
             Expanded(
-              child: _filteredTrips.isEmpty
-                  ? Center(
-                      child: Text(
-                        AppStrings.favoritesEmpty,
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.textSecondary,
+              child: BlocConsumer<AdminTripsCubit, AdminTripsStates>(
+                listener: (context, state) {
+                  if (state is AdminTripsFailure) {
+                    AppSnackbar.showError(
+                      context: context,
+                      message: state.message,
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if (state is AdminTripsLoading ||
+                      state is AdminTripsInitial) {
+                    return const AppLoading();
+                  }
+
+                  if (state is AdminTripsFailure) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(AppSizes.p24),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              state.message,
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: AppSizes.p16),
+                            AppButton(
+                              text: 'إعادة المحاولة',
+                              onPressed: () => context
+                                  .read<AdminTripsCubit>()
+                                  .getAdminTrips(
+                                    status: _filterStatuses[_selectedFilterIndex],
+                                  ),
+                            ),
+                          ],
                         ),
                       ),
-                    )
-                  : ListView.separated(
-                      padding: EdgeInsets.all(AppSizes.p20),
-                      itemCount: _filteredTrips.length,
-                      separatorBuilder: (context, index) =>
-                          SizedBox(height: AppSizes.p16),
-                      itemBuilder: (context, index) {
-                        final trip = _filteredTrips[index];
-                        return AdminTripCard(
-                          title: trip['title']!,
-                          duration: trip['duration']!,
-                          price: trip['price']!,
-                          status: trip['status']!,
-                          imagePath: trip['image']!,
-                          onEdit: () {
-                            // Action callback for edit
-                          },
-                          onDelete: () {
-                            // Action callback for delete
-                          },
-                          onRepublish: () {
-                            // Action callback for republish
-                          },
-                          onView: () {
-                            context.push(
-                              RouteNames.adminBookings,
-                              extra: trip['title']!,
-                            );
-                          },
-                        );
-                      },
-                    ),
+                    );
+                  }
+
+                  if (state is AdminTripsSuccess) {
+                    final trips = state.adminTrips;
+
+                    if (trips.isEmpty) {
+                      return Center(
+                        child: Text(
+                          AppStrings.favoritesEmpty,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      );
+                    }
+
+                    return RefreshIndicator(
+                      onRefresh: () => context
+                          .read<AdminTripsCubit>()
+                          .getAdminTrips(
+                            status: _filterStatuses[_selectedFilterIndex],
+                          ),
+                      child: ListView.separated(
+                        padding: EdgeInsets.all(AppSizes.p20),
+                        itemCount: trips.length,
+                        separatorBuilder: (_, __) =>
+                            SizedBox(height: AppSizes.p16),
+                        itemBuilder: (context, index) {
+                          final trip = trips[index];
+                          return AdminTripCard(
+                            title: trip.title ?? '',
+                            duration: _formatDuration(trip),
+                            price: _formatPrice(trip.price),
+                            status: _statusLabel(trip.status),
+                            imagePath: _imageUrl(trip.coverImage),
+                            onEdit: () {},
+                            onDelete: () {},
+                            onRepublish: () {},
+                            onView: () {
+                              context.push(
+                                RouteNames.adminBookings,
+                                extra: trip.title,
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  }
+
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
           ],
         ),

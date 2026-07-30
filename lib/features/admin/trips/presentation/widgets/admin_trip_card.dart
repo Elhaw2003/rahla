@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
+import 'package:travel_app/core/shared/widgets/app_network_image.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
 
@@ -55,12 +56,30 @@ class AdminTripCard extends StatelessWidget {
                 // Trip Image Thumbnail
                 ClipRRect(
                   borderRadius: BorderRadius.circular(AppSizes.r8),
-                  child: Image.asset(
-                    imagePath,
-                    width: 110.w,
-                    height: 85.h,
-                    fit: BoxFit.cover,
-                  ),
+                  child: imagePath.startsWith('http')
+                      ? AppNetworkImage(
+                          imageUrl: imagePath,
+                          width: 110.w,
+                          height: 85.h,
+                          fit: BoxFit.cover,
+                          borderRadius: AppSizes.r8,
+                        )
+                      : Image.asset(
+                          imagePath,
+                          width: 110.w,
+                          height: 85.h,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            width: 110.w,
+                            height: 85.h,
+                            color: AppColors.border,
+                            child: Icon(
+                              Icons.image_not_supported_outlined,
+                              color: AppColors.textHint,
+                              size: 24.sp,
+                            ),
+                          ),
+                        ),
                 ),
                 SizedBox(width: AppSizes.p12),
 
