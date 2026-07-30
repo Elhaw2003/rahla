@@ -7,4 +7,6 @@ class EndPoints {
   static const String refreshToken = "${auth}refresh-token";
   static const String adminStats = "admin/stats";
   static const String adminTrips = "trips/admin/all";
+  static const String categories = "categories";
+  static const String addTrip = "trips";
 }

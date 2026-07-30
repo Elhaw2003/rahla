@@ -6,14 +6,16 @@ import 'package:travel_app/core/theme/app_sizes.dart';
 
 class AddTripBottomActionBar extends StatelessWidget {
   final int currentStep;
-  final VoidCallback onPrevious;
-  final VoidCallback onNext;
+  final VoidCallback? onPrevious;
+  final VoidCallback? onNext;
+  final bool isLoading;
 
   const AddTripBottomActionBar({
     super.key,
     required this.currentStep,
     required this.onPrevious,
     required this.onNext,
+    this.isLoading = false,
   });
 
   @override
@@ -30,7 +32,7 @@ class AddTripBottomActionBar extends StatelessWidget {
             Expanded(
               child: AppButton.outlined(
                 text: AppStrings.adminPreviousStep,
-                onPressed: onPrevious,
+                onPressed: isLoading ? null : onPrevious,
               ),
             ),
             SizedBox(width: AppSizes.p12),
@@ -40,7 +42,8 @@ class AddTripBottomActionBar extends StatelessWidget {
               text: currentStep == 3
                   ? AppStrings.adminPublishTrip
                   : AppStrings.adminNextStep,
-              onPressed: onNext,
+              isLoading: isLoading,
+              onPressed: isLoading ? null : onNext,
             ),
           ),
         ],

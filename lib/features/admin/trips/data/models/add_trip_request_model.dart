@@ -1,0 +1,230 @@
+import 'package:image_picker/image_picker.dart';
+import 'package:travel_app/features/admin/trips/data/models/admin_trips_model.dart';
+import 'package:travel_app/features/admin/trips/data/models/categories_response_model.dart';
+
+class ActivityRequest {
+  String id;
+  String time;
+  String title;
+  String description;
+  String location;
+
+  ActivityRequest({
+    this.id = '',
+    this.time = '',
+    this.title = '',
+    this.description = '',
+    this.location = '',
+  });
+
+  factory ActivityRequest.fromModel(AdminTripActivity model) {
+    return ActivityRequest(
+      id: model.id ?? '',
+      time: model.time ?? '',
+      title: model.title ?? '',
+      description: model.description ?? '',
+      location: model.location ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (id.isNotEmpty) '_id': id,
+      'time': time,
+      'title': title,
+      'description': description,
+      'location': location,
+    };
+  }
+
+  factory ActivityRequest.fromJson(Map<String, dynamic> json) {
+    return ActivityRequest(
+      id: json['_id'] as String? ?? json['id'] as String? ?? '',
+      time: json['time'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      location: json['location'] as String? ?? '',
+    );
+  }
+}
+
+class TripDayRequest {
+  String id;
+  int dayNumber;
+  String title;
+  List<ActivityRequest> activities;
+
+  TripDayRequest({
+    this.id = '',
+    required this.dayNumber,
+    this.title = '',
+    List<ActivityRequest>? activities,
+  }) : activities = activities ?? [];
+
+  factory TripDayRequest.fromModel(AdminTripDay model) {
+    return TripDayRequest(
+      id: model.id ?? '',
+      dayNumber: model.dayNumber,
+      title: model.title ?? '',
+      activities: model.activities
+          .map(ActivityRequest.fromModel)
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (id.isNotEmpty) '_id': id,
+      'dayNumber': dayNumber,
+      'title': title,
+      'activities': activities.map((e) => e.toJson()).toList(),
+    };
+  }
+
+  factory TripDayRequest.fromJson(Map<String, dynamic> json) {
+    return TripDayRequest(
+      id: json['_id'] as String? ?? json['id'] as String? ?? '',
+      dayNumber: json['dayNumber'] as int? ?? 1,
+      title: json['title'] as String? ?? '',
+      activities: (json['activities'] as List?)
+              ?.map(
+                (e) => ActivityRequest.fromJson(
+                  Map<String, dynamic>.from(e as Map),
+                ),
+              )
+              .toList() ??
+          [],
+    );
+  }
+}
+
+class CreateTripRequest {
+  String title;
+  String description;
+  String origin;
+  String destination;
+  num price;
+  int capacity;
+  DateTime? startDate;
+  DateTime? endDate;
+  String category;
+  CategoryModel? selectedCategory;
+  String status;
+  bool isProtected;
+  String cancelPolicy;
+
+  /// For multipart upload only — not sent inside JSON body.
+  XFile? coverImage;
+  List<XFile> gallery;
+
+  List<String> included;
+  List<String> excluded;
+  List<TripDayRequest> days;
+
+  CreateTripRequest({
+    this.title = '',
+    this.description = '',
+    this.origin = '',
+    this.destination = '',
+    this.price = 0,
+    this.capacity = 0,
+    this.startDate,
+    this.endDate,
+    this.category = '',
+    this.selectedCategory,
+    this.status = 'published',
+    this.isProtected = true,
+    this.cancelPolicy = '',
+    this.coverImage,
+    List<XFile>? gallery,
+    List<String>? included,
+    List<String>? excluded,
+    List<TripDayRequest>? days,
+  }) : gallery = gallery ?? [],
+       included = included ?? [],
+       excluded = excluded ?? [],
+       days = days ?? [TripDayRequest(dayNumber: 1)];
+
+  factory CreateTripRequest.fromTrip(AdminTripModel trip) {
+    return CreateTripRequest(
+      title: trip.title ?? '',
+      description: trip.description ?? '',
+      origin: trip.origin ?? '',
+      destination: trip.destination ?? '',
+      price: trip.price,
+      capacity: trip.capacity,
+      startDate: DateTime.tryParse(trip.startDate ?? ''),
+      endDate: DateTime.tryParse(trip.endDate ?? ''),
+      category: trip.category?.id ?? '',
+      selectedCategory: trip.category == null
+          ? null
+          : CategoryModel(
+              id: trip.category!.id,
+              nameEn: trip.category!.nameEn,
+              nameAr: trip.category!.nameAr,
+              slug: trip.category!.slug,
+              image: trip.category!.image,
+            ),
+      status: trip.status ?? 'published',
+      isProtected: trip.isProtected,
+      cancelPolicy: trip.cancelPolicy ?? '',
+      included: List<String>.from(trip.included),
+      excluded: List<String>.from(trip.excluded),
+      days: trip.days.map(TripDayRequest.fromModel).toList(),
+    );
+  }
+
+  /// Matches create-trip API JSON body.
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'description': description,
+      'origin': origin,
+      'destination': destination,
+      'price': price,
+      'capacity': capacity,
+      'category': category,
+      'startDate': startDate?.toIso8601String() ?? '',
+      'endDate': endDate?.toIso8601String() ?? '',
+      'status': status,
+      'isProtected': isProtected,
+      'included': included,
+      'excluded': excluded,
+      'cancelPolicy': cancelPolicy,
+      'days': days.map((e) => e.toJson()).toList(),
+    };
+  }
+
+  factory CreateTripRequest.fromJson(Map<String, dynamic> json) {
+    return CreateTripRequest(
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      origin: json['origin'] as String? ?? '',
+      destination: json['destination'] as String? ?? '',
+      price: json['price'] as num? ?? 0,
+      capacity: json['capacity'] as int? ?? 0,
+      startDate: json['startDate'] != null
+          ? DateTime.tryParse(json['startDate'].toString())
+          : null,
+      endDate: json['endDate'] != null
+          ? DateTime.tryParse(json['endDate'].toString())
+          : null,
+      category: json['category'] as String? ?? '',
+      status: json['status'] as String? ?? 'published',
+      isProtected: json['isProtected'] as bool? ?? true,
+      cancelPolicy: json['cancelPolicy'] as String? ?? '',
+      included: (json['included'] as List?)?.map((e) => e.toString()).toList() ??
+          [],
+      excluded: (json['excluded'] as List?)?.map((e) => e.toString()).toList() ??
+          [],
+      days: (json['days'] as List?)
+              ?.map(
+                (e) => TripDayRequest.fromJson(
+                  Map<String, dynamic>.from(e as Map),
+                ),
+              )
+              .toList() ??
+          [],
+    );
+  }
+}

@@ -200,6 +200,8 @@ class AppStrings {
   static String get adminOriginHint => 'admin.originHint'.tr();
   static String get adminDestinationLabel => 'admin.destinationLabel'.tr();
   static String get adminDestinationHint => 'admin.destinationHint'.tr();
+  static String get adminCategoryLabel => 'admin.categoryLabel'.tr();
+  static String get adminCategoryHint => 'admin.categoryHint'.tr();
   static String get adminPriceLabel => 'admin.priceLabel'.tr();
   static String get adminPriceHint => 'admin.priceHint'.tr();
   static String get adminCapacityLabel => 'admin.capacityLabel'.tr();
