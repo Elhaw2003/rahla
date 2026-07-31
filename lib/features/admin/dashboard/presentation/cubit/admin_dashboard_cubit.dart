@@ -5,9 +5,8 @@ import 'package:travel_app/features/admin/dashboard/presentation/cubit/admin_das
 class AdminDashboardCubit extends Cubit<AdminDashboardStates> {
   final DashboardRepo _dashboardRepo;
 
-  AdminDashboardCubit({required DashboardRepo dashboardRepo})
-    : _dashboardRepo = dashboardRepo,
-      super(AdminDashboardInitial());
+  AdminDashboardCubit({required this._dashboardRepo})
+    : super(AdminDashboardInitial());
 
   Future<void> getAdminStats() async {
     emit(AdminDashboardLoading());

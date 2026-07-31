@@ -5,9 +5,8 @@ import 'package:travel_app/features/admin/trips/data/repo/admin_trip_manager_rep
 import 'package:travel_app/features/admin/trips/presentation/cubit/admin_trip_manager_states.dart';
 
 class AdminTripManagerCubit extends Cubit<AdminTripManagerStates> {
-  AdminTripManagerCubit({required AdminTripManagerRepo adminTripManagerRepo})
-    : _adminTripManagerRepo = adminTripManagerRepo,
-      super(const AdminTripManagerInitial());
+  AdminTripManagerCubit({required this._adminTripManagerRepo})
+    : super(const AdminTripManagerInitial());
 
   final AdminTripManagerRepo _adminTripManagerRepo;
 

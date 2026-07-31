@@ -26,7 +26,7 @@ class AdminTripsSuccess extends AdminTripsStates {
   final int totalPages;
   final int currentPage;
   final bool hasMore;
-  final bool? isLoadingMore;
+  final bool isLoadingMore;
   const AdminTripsSuccess({
     required this.adminTrips,
     required this.totalItems,

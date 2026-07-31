@@ -116,7 +116,7 @@ class AddTripStep1BasicInfo extends StatelessWidget {
     required ValueChanged<T?> onChanged,
   }) {
     return DropdownButtonFormField<T>(
-      value: value,
+      initialValue: value,
       items: items,
       onChanged: onChanged,
       isExpanded: true,
@@ -126,10 +126,7 @@ class AddTripStep1BasicInfo extends StatelessWidget {
         size: 22.sp,
       ),
       style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-      ),
+      decoration: InputDecoration(labelText: label, hintText: hint),
     );
   }
 }

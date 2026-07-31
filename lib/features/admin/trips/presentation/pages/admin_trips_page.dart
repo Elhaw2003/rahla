@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
 import 'package:travel_app/core/router/route_names.dart';
@@ -23,6 +23,28 @@ class AdminTripsPage extends StatefulWidget {
 }
 
 class _AdminTripsPageState extends State<AdminTripsPage> {
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      context.read<AdminTripsCubit>().loadMore();
+    }
+  }
+
   int _selectedFilterIndex = 0;
 
   static const _filterStatuses = <String?>[
@@ -151,10 +173,10 @@ class _AdminTripsPageState extends State<AdminTripsPage> {
                             SizedBox(height: AppSizes.p16),
                             AppButton(
                               text: 'إعادة المحاولة',
-                              onPressed: () => context
-                                  .read<AdminTripsCubit>()
-                                  .getAdminTrips(
-                                    status: _filterStatuses[_selectedFilterIndex],
+                              onPressed: () =>
+                                  context.read<AdminTripsCubit>().getAdminTrips(
+                                    status:
+                                        _filterStatuses[_selectedFilterIndex],
                                   ),
                             ),
                           ],
@@ -178,17 +200,26 @@ class _AdminTripsPageState extends State<AdminTripsPage> {
                     }
 
                     return RefreshIndicator(
-                      onRefresh: () => context
-                          .read<AdminTripsCubit>()
-                          .getAdminTrips(
+                      onRefresh: () =>
+                          context.read<AdminTripsCubit>().getAdminTrips(
                             status: _filterStatuses[_selectedFilterIndex],
                           ),
                       child: ListView.separated(
                         padding: EdgeInsets.all(AppSizes.p20),
-                        itemCount: trips.length,
-                        separatorBuilder: (_, __) =>
+                        itemCount: trips.length + (state.isLoadingMore ? 1 : 0),
+                        controller: _scrollController,
+                        separatorBuilder: (_, _) =>
                             SizedBox(height: AppSizes.p16),
                         itemBuilder: (context, index) {
+                          if (index >= trips.length) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: AppSizes.p16,
+                              ),
+                              child: const AppLoading(),
+                            );
+                          }
+
                           final trip = trips[index];
                           return AdminTripCard(
                             title: trip.title ?? '',
@@ -224,7 +255,9 @@ class _AdminTripsPageState extends State<AdminTripsPage> {
         onPressed: () async {
           final created = await context.push<bool>(RouteNames.addTrip);
           if (created == true && context.mounted) {
-            context.read<AdminTripsCubit>().getAdminTrips();
+            context.read<AdminTripsCubit>().getAdminTrips(
+              status: _filterStatuses[_selectedFilterIndex],
+            );
           }
         },
         child: const Icon(Icons.add, color: Colors.white),

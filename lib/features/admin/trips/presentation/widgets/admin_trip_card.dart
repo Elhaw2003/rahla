@@ -69,7 +69,7 @@ class AdminTripCard extends StatelessWidget {
                           width: 110.w,
                           height: 85.h,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Container(
+                          errorBuilder: (_, _, _) => Container(
                             width: 110.w,
                             height: 85.h,
                             color: AppColors.border,

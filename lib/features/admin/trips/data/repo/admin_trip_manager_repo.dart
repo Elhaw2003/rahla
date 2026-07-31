@@ -22,8 +22,7 @@ abstract class AdminTripManagerRepo {
 class AdminTripManagerRepoImpl implements AdminTripManagerRepo {
   final ApiConsumer _apiConsumer;
 
-  AdminTripManagerRepoImpl({required ApiConsumer apiConsumer})
-    : _apiConsumer = apiConsumer;
+  AdminTripManagerRepoImpl({required this._apiConsumer});
 
   @override
   Future<Either<Failure, AddTripResponseModel>> addTrip(

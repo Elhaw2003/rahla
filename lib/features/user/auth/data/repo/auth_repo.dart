@@ -19,10 +19,9 @@ class AuthRepoImpl implements AuthRepo {
   final SecureStorageCaching _secureStorage;
 
   const AuthRepoImpl({
-    required ApiConsumer apiConsumer,
-    required SecureStorageCaching secureStorage,
-  }) : _apiConsumer = apiConsumer,
-       _secureStorage = secureStorage;
+    required this._apiConsumer,
+    required this._secureStorage,
+  });
 
   @override
   Future<Either<Failure, LoginResponseModel>> login({
