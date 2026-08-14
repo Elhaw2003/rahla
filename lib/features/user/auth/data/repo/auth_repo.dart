@@ -18,6 +18,9 @@ abstract class AuthRepo {
   Future<Either<Failure, RegisterResponseModel>> register({
     required RegisterRequestModel request,
   });
+  Future<Either<Failure, LoginResponseModel>> signInWithGoogle({
+    required String idToken,
+  });
 }
 
 class AuthRepoImpl implements AuthRepo {
@@ -25,9 +28,10 @@ class AuthRepoImpl implements AuthRepo {
   final SecureStorageCaching _secureStorage;
 
   const AuthRepoImpl({
-    required this._apiConsumer,
-    required this._secureStorage,
-  });
+    required ApiConsumer apiConsumer,
+    required SecureStorageCaching secureStorage,
+  }) : _apiConsumer = apiConsumer,
+       _secureStorage = secureStorage;
 
   @override
   Future<Either<Failure, LoginResponseModel>> login({
@@ -104,6 +108,40 @@ class AuthRepoImpl implements AuthRepo {
         await _secureStorage.saveUser(user.toJson());
       }
       return Right(registerResponse);
+    } on AppException catch (e) {
+      return Left(mapExceptionToFailure(e));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, LoginResponseModel>> signInWithGoogle({
+    required String idToken,
+  }) async {
+    try {
+      final response = await _apiConsumer.post(
+        EndPoints.googleLogin,
+        data: {'idToken': idToken},
+      );
+      final loginResponse = LoginResponseModel.fromJson(
+        Map<String, dynamic>.from(response as Map),
+      );
+      if (loginResponse.data != null) {
+        final accessToken = loginResponse.data?.accessToken;
+        final refreshToken = loginResponse.data?.refreshToken;
+        final user = loginResponse.data?.user;
+        if (accessToken != null && accessToken.isNotEmpty) {
+          await _secureStorage.saveAccessToken(accessToken);
+        }
+        if (refreshToken != null && refreshToken.isNotEmpty) {
+          await _secureStorage.saveRefreshToken(refreshToken);
+        }
+        if (user != null) {
+          await _secureStorage.saveUser(user.toJson());
+        }
+      }
+      return Right(loginResponse);
     } on AppException catch (e) {
       return Left(mapExceptionToFailure(e));
     } catch (e) {

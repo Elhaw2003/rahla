@@ -5,6 +5,7 @@ class EndPoints {
   static const String auth = "auth/";
   static const String login = "${auth}login";
   static const String register = "${auth}register";
+  static const String googleLogin = "${auth}google";
   static const String refreshToken = "${auth}refresh-token";
   static const String adminStats = "admin/stats";
   static const String adminTrips = "trips/admin/all";
