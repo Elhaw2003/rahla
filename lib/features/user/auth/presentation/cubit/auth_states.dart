@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:travel_app/features/user/auth/data/models/login_response_model.dart';
+import 'package:travel_app/features/user/auth/data/models/register_response_model.dart';
 
 class AuthStates extends Equatable {
   const AuthStates();
@@ -30,4 +31,11 @@ class AuthFailure extends AuthStates {
 
   @override
   List<Object?> get props => [message];
+}
+
+class RegisterSuccess extends AuthStates {
+  final RegisterResponseModel registerResponse;
+  const RegisterSuccess({required this.registerResponse});
+  @override
+  List<Object?> get props => [registerResponse];
 }

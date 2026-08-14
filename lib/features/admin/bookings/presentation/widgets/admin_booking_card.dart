@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
 import 'package:travel_app/core/router/route_names.dart';
+import 'package:travel_app/core/shared/widgets/app_network_image.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
 
@@ -148,6 +149,8 @@ class AdminBookingCard extends StatelessWidget {
                     children: [
                       Text(
                         tripTitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.titleMedium.copyWith(
                           fontWeight: FontWeight.bold,
                           color: AppColors.textPrimary,
@@ -157,10 +160,14 @@ class AdminBookingCard extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            tripDates,
-                            style: AppTextStyles.labelSmall.copyWith(
-                              color: AppColors.textSecondary,
+                          Flexible(
+                            child: Text(
+                              tripDates,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.labelSmall.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
                             ),
                           ),
                           SizedBox(width: AppSizes.p4),
@@ -226,12 +233,30 @@ class AdminBookingCard extends StatelessWidget {
                 // Trip Image Thumbnail
                 ClipRRect(
                   borderRadius: BorderRadius.circular(AppSizes.r8),
-                  child: Image.asset(
-                    tripImage,
-                    width: 90.w,
-                    height: 90.h,
-                    fit: BoxFit.cover,
-                  ),
+                  child: tripImage.startsWith('http')
+                      ? AppNetworkImage(
+                          imageUrl: tripImage,
+                          width: 90.w,
+                          height: 90.h,
+                          fit: BoxFit.cover,
+                          borderRadius: AppSizes.r8,
+                        )
+                      : Image.asset(
+                          tripImage,
+                          width: 90.w,
+                          height: 90.h,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(
+                            width: 90.w,
+                            height: 90.h,
+                            color: AppColors.border,
+                            child: Icon(
+                              Icons.image_not_supported_outlined,
+                              color: AppColors.textHint,
+                              size: 24.sp,
+                            ),
+                          ),
+                        ),
                 ),
               ],
             ),

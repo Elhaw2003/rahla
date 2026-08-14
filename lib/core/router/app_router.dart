@@ -19,6 +19,7 @@ import 'package:travel_app/features/admin/trips/presentation/cubit/admin_trips_c
 import 'package:travel_app/features/admin/trips/presentation/cubit/categories_cubit.dart';
 import 'package:travel_app/features/admin/trips/presentation/pages/add_trip_page.dart';
 import 'package:travel_app/features/admin/trips/presentation/pages/admin_trips_page.dart';
+import 'package:travel_app/features/admin/bookings/presentation/cubit/admin_booking_cubit.dart';
 import 'package:travel_app/features/admin/bookings/presentation/pages/admin_bookings_page.dart';
 import 'package:travel_app/features/admin/bookings/presentation/pages/admin_booking_details_page.dart';
 import 'route_names.dart';
@@ -43,7 +44,10 @@ class AppRouter {
       ),
       GoRoute(
         path: RouteNames.register,
-        builder: (context, state) => const RegisterPage(),
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<AuthCubit>(),
+          child: const RegisterPage(),
+        ),
       ),
       GoRoute(
         path: RouteNames.home,
@@ -90,7 +94,10 @@ class AppRouter {
         path: RouteNames.adminBookings,
         builder: (context, state) {
           final tripTitle = state.extra as String?;
-          return AdminBookingsPage(initialTripFilter: tripTitle);
+          return BlocProvider(
+            create: (_) => getIt<AdminBookingCubit>()..getAdminBookings(),
+            child: AdminBookingsPage(initialTripFilter: tripTitle),
+          );
         },
       ),
       GoRoute(

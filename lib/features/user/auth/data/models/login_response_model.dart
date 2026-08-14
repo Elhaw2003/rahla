@@ -1,11 +1,13 @@
-class LoginResponseModel {
+import 'package:equatable/equatable.dart';
+
+class LoginResponseModel extends Equatable {
   final int statusCode;
   final bool success;
   final String code;
   final String message;
   final LoginResponseDataModel? data;
 
-  LoginResponseModel({
+  const LoginResponseModel({
     required this.statusCode,
     required this.success,
     required this.code,
@@ -26,31 +28,39 @@ class LoginResponseModel {
             ),
     );
   }
+
+  @override
+  List<Object?> get props => [statusCode, success, code, message, data];
 }
 
-class LoginResponseDataModel {
-  final UserModel? user;
+class LoginResponseDataModel extends Equatable {
+  final UserResponseModel? user;
   final String? accessToken;
   final String? refreshToken;
 
-  LoginResponseDataModel({
+  const LoginResponseDataModel({
     this.user,
     this.accessToken,
     this.refreshToken,
   });
 
+  @override
+  List<Object?> get props => [user, accessToken, refreshToken];
+
   factory LoginResponseDataModel.fromJson(Map<String, dynamic> json) {
     return LoginResponseDataModel(
       user: json['user'] == null
           ? null
-          : UserModel.fromJson(Map<String, dynamic>.from(json['user'] as Map)),
+          : UserResponseModel.fromJson(
+              Map<String, dynamic>.from(json['user'] as Map),
+            ),
       accessToken: json['accessToken'] as String?,
       refreshToken: json['refreshToken'] as String?,
     );
   }
 }
 
-class UserModel {
+class UserResponseModel extends Equatable {
   final String? id;
   final String? fullName;
   final String? email;
@@ -64,7 +74,7 @@ class UserModel {
   final List<String> fcmTokens;
   final bool isProtected;
 
-  UserModel({
+  const UserResponseModel({
     this.id,
     this.fullName,
     this.email,
@@ -79,8 +89,8 @@ class UserModel {
     this.isProtected = false,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
+  factory UserResponseModel.fromJson(Map<String, dynamic> json) {
+    return UserResponseModel(
       id: json['_id'] as String?,
       fullName: json['fullName'] as String?,
       email: json['email'] as String?,
@@ -91,9 +101,8 @@ class UserModel {
       createdAt: json['createdAt'] as String?,
       updatedAt: json['updatedAt'] as String?,
       v: json['__v'] as int?,
-      fcmTokens: (json['fcmTokens'] as List?)
-              ?.map((e) => e.toString())
-              .toList() ??
+      fcmTokens:
+          (json['fcmTokens'] as List?)?.map((e) => e.toString()).toList() ??
           const [],
       isProtected: json['isProtected'] as bool? ?? false,
     );
@@ -115,4 +124,20 @@ class UserModel {
       'isProtected': isProtected,
     };
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    fullName,
+    email,
+    phone,
+    profileImage,
+    authProvider,
+    role,
+    createdAt,
+    updatedAt,
+    v,
+    fcmTokens,
+    isProtected,
+  ];
 }

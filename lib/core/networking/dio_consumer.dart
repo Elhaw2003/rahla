@@ -13,7 +13,9 @@ class DioConsumer implements ApiConsumer {
   Future<dynamic> delete(
     String path, {
     Map<String, dynamic>? queryParameters,
-    data,
+    Object? data,
+    CancelToken? cancelToken,
+    Options? options,
   }) async {
     try {
       await _checkInternet();
@@ -21,6 +23,8 @@ class DioConsumer implements ApiConsumer {
         path,
         data: data,
         queryParameters: queryParameters,
+        cancelToken: cancelToken,
+        options: options,
       );
       return response.data;
     } on DioException catch (e) {
@@ -34,6 +38,7 @@ class DioConsumer implements ApiConsumer {
     Map<String, dynamic>? queryParameters,
     Object? data,
     CancelToken? cancelToken,
+    Options? options,
   }) async {
     try {
       await _checkInternet();
@@ -42,6 +47,7 @@ class DioConsumer implements ApiConsumer {
         data: data,
         queryParameters: queryParameters,
         cancelToken: cancelToken,
+        options: options,
       );
       return response.data;
     } on DioException catch (e) {
@@ -57,6 +63,7 @@ class DioConsumer implements ApiConsumer {
     String path, {
     Map<String, dynamic>? queryParameters,
     data,
+    Options? options,
   }) async {
     try {
       await _checkInternet();
@@ -64,6 +71,7 @@ class DioConsumer implements ApiConsumer {
         path,
         data: data,
         queryParameters: queryParameters,
+        options: options,
       );
       return response.data;
     } on DioException catch (e) {
@@ -76,6 +84,7 @@ class DioConsumer implements ApiConsumer {
     String path, {
     Map<String, dynamic>? queryParameters,
     data,
+    Options? options,
   }) async {
     try {
       await _checkInternet();
@@ -83,6 +92,7 @@ class DioConsumer implements ApiConsumer {
         path,
         data: data,
         queryParameters: queryParameters,
+        options: options,
       );
       return response.data;
     } on DioException catch (e) {
@@ -95,6 +105,7 @@ class DioConsumer implements ApiConsumer {
     String path, {
     Map<String, dynamic>? queryParameters,
     data,
+    Options? options,
   }) async {
     try {
       await _checkInternet();
@@ -102,6 +113,7 @@ class DioConsumer implements ApiConsumer {
         path,
         data: data,
         queryParameters: queryParameters,
+        options: options,
       );
       return response.data;
     } on DioException catch (e) {

@@ -16,6 +16,8 @@ import 'package:travel_app/features/admin/trips/data/repo/categories_repo.dart';
 import 'package:travel_app/features/admin/trips/presentation/cubit/admin_trip_manager_cubit.dart';
 import 'package:travel_app/features/admin/trips/presentation/cubit/admin_trips_cubit.dart';
 import 'package:travel_app/features/admin/trips/presentation/cubit/categories_cubit.dart';
+import 'package:travel_app/features/admin/bookings/data/repo/admin_booking_repo.dart';
+import 'package:travel_app/features/admin/bookings/presentation/cubit/admin_booking_cubit.dart';
 import 'package:travel_app/features/user/auth/data/repo/auth_repo.dart';
 import 'package:travel_app/features/user/auth/presentation/cubit/auth_cubit.dart';
 
@@ -90,5 +92,13 @@ Future<void> setupGetIt() async {
     () => AdminTripManagerCubit(
       adminTripManagerRepo: getIt<AdminTripManagerRepo>(),
     ),
+  );
+
+  // Features - Admin Bookings
+  getIt.registerLazySingleton<AdminBookingRepo>(
+    () => AdminBookingRepo(apiConsumer: getIt<ApiConsumer>()),
+  );
+  getIt.registerFactory<AdminBookingCubit>(
+    () => AdminBookingCubit(adminBookingRepo: getIt<AdminBookingRepo>()),
   );
 }
