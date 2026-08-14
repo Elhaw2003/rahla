@@ -11,7 +11,14 @@ import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
 
 class SocialAuthButtons extends StatelessWidget {
-  const SocialAuthButtons({super.key});
+  final VoidCallback? onGooglePressed;
+  final bool isLoading;
+
+  const SocialAuthButtons({
+    super.key,
+    this.onGooglePressed,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +40,14 @@ class SocialAuthButtons extends StatelessWidget {
         AppButton.outlined(
           text: AppStrings.loginGoogle,
           icon: Image.asset(AppAssets.googleLogo, width: 24.w, height: 24.h),
-          onPressed: () {},
+          isLoading: isLoading,
+          onPressed: isLoading ? null : onGooglePressed,
         ),
         AppSizes.p16.verticalSpace,
         AppButton.outlined(
           text: AppStrings.loginFacebook,
           icon: Image.asset(AppAssets.facebookLogo, width: 24.w, height: 24.h),
-          onPressed: () {},
+          onPressed: isLoading ? null : () {},
         ),
         AppSizes.p16.verticalSpace,
         AppButton.outlined(
@@ -48,9 +56,11 @@ class SocialAuthButtons extends StatelessWidget {
             Icons.admin_panel_settings_outlined,
             color: AppColors.primary,
           ),
-          onPressed: () {
-            context.go(RouteNames.adminDashboard);
-          },
+          onPressed: isLoading
+              ? null
+              : () {
+                  context.go(RouteNames.adminDashboard);
+                },
         ),
       ],
     );

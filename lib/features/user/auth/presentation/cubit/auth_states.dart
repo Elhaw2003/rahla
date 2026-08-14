@@ -39,3 +39,10 @@ class RegisterSuccess extends AuthStates {
   @override
   List<Object?> get props => [registerResponse];
 }
+
+class GoogleLoginSuccess extends AuthStates {
+  final LoginResponseModel loginResponse;
+  const GoogleLoginSuccess({required this.loginResponse});
+  @override
+  List<Object?> get props => [loginResponse];
+}

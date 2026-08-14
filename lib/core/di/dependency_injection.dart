@@ -18,6 +18,7 @@ import 'package:travel_app/features/admin/trips/presentation/cubit/admin_trips_c
 import 'package:travel_app/features/admin/trips/presentation/cubit/categories_cubit.dart';
 import 'package:travel_app/features/admin/bookings/data/repo/admin_booking_repo.dart';
 import 'package:travel_app/features/admin/bookings/presentation/cubit/admin_booking_cubit.dart';
+import 'package:travel_app/core/services/google_service.dart';
 import 'package:travel_app/features/user/auth/data/repo/auth_repo.dart';
 import 'package:travel_app/features/user/auth/presentation/cubit/auth_cubit.dart';
 
@@ -50,6 +51,7 @@ Future<void> setupGetIt() async {
   );
 
   // Features - Auth
+  getIt.registerLazySingleton<GoogleService>(() => GoogleService());
   getIt.registerLazySingleton<AuthRepo>(
     () => AuthRepoImpl(
       apiConsumer: getIt<ApiConsumer>(),
@@ -57,7 +59,10 @@ Future<void> setupGetIt() async {
     ),
   );
   getIt.registerFactory<AuthCubit>(
-    () => AuthCubit(authRepo: getIt<AuthRepo>()),
+    () => AuthCubit(
+      authRepo: getIt<AuthRepo>(),
+      googleService: getIt<GoogleService>(),
+    ),
   );
 
   // Features - Admin Dashboard

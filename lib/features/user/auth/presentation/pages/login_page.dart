@@ -52,13 +52,16 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: BlocConsumer<AuthCubit, AuthStates>(
           listener: (context, state) {
-            if (state is LoginSuccess) {
-              final message = state.loginResponse.message;
+            if (state is LoginSuccess || state is GoogleLoginSuccess) {
+              final loginResponse = state is LoginSuccess
+                  ? state.loginResponse
+                  : (state as GoogleLoginSuccess).loginResponse;
+              final message = loginResponse.message;
               if (message.isNotEmpty) {
                 AppSnackbar.showSuccess(context: context, message: message);
               }
 
-              final role = state.loginResponse.data?.user?.role;
+              final role = loginResponse.data?.user?.role;
               if (role == 'admin') {
                 context.go(RouteNames.adminDashboard);
               } else {
@@ -137,7 +140,12 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: isLoading ? null : _onLogin,
                     ),
                     AppSizes.p32.verticalSpace,
-                    const SocialAuthButtons(),
+                    SocialAuthButtons(
+                      isLoading: isLoading,
+                      onGooglePressed: () {
+                        context.read<AuthCubit>().signInWithGoogle();
+                      },
+                    ),
                     40.h.verticalSpace,
                     RichText(
                       text: TextSpan(
