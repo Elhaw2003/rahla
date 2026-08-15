@@ -44,9 +44,11 @@ class AppButton extends StatelessWidget {
         ? SizedBox(
             height: AppSizes.iconMedium,
             width: AppSizes.iconMedium,
-            child: const CircularProgressIndicator(
+            child: CircularProgressIndicator(
               strokeWidth: 2,
-              color: Colors.white,
+              color: type == AppButtonType.outlined
+                  ? (foregroundColor ?? Theme.of(context).colorScheme.primary)
+                  : Colors.white,
             ),
           )
         : icon != null 

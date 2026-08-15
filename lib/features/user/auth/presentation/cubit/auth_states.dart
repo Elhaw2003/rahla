@@ -17,6 +17,10 @@ class AuthLoading extends AuthStates {
   const AuthLoading();
 }
 
+class GoogleAuthLoading extends AuthStates {
+  const GoogleAuthLoading();
+}
+
 class LoginSuccess extends AuthStates {
   final LoginResponseModel loginResponse;
   const LoginSuccess({required this.loginResponse});

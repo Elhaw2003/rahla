@@ -72,7 +72,9 @@ class _LoginPageState extends State<LoginPage> {
             }
           },
           builder: (context, state) {
-            final isLoading = state is AuthLoading;
+            final isLoginLoading = state is AuthLoading;
+            final isGoogleLoading = state is GoogleAuthLoading;
+            final isBusy = isLoginLoading || isGoogleLoading;
 
             return SingleChildScrollView(
               padding: EdgeInsets.symmetric(
@@ -136,15 +138,17 @@ class _LoginPageState extends State<LoginPage> {
                     AppSizes.p24.verticalSpace,
                     AppButton(
                       text: AppStrings.login,
-                      isLoading: isLoading,
-                      onPressed: isLoading ? null : _onLogin,
+                      isLoading: isLoginLoading,
+                      onPressed: isBusy ? null : _onLogin,
                     ),
                     AppSizes.p32.verticalSpace,
                     SocialAuthButtons(
-                      isLoading: isLoading,
-                      onGooglePressed: () {
-                        context.read<AuthCubit>().signInWithGoogle();
-                      },
+                      isLoading: isGoogleLoading,
+                      onGooglePressed: isBusy
+                          ? null
+                          : () {
+                              context.read<AuthCubit>().signInWithGoogle();
+                            },
                     ),
                     40.h.verticalSpace,
                     RichText(

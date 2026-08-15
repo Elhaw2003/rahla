@@ -47,6 +47,7 @@ class SocialAuthButtons extends StatelessWidget {
         AppButton.outlined(
           text: AppStrings.loginFacebook,
           icon: Image.asset(AppAssets.facebookLogo, width: 24.w, height: 24.h),
+          isDisabled: isLoading,
           onPressed: isLoading ? null : () {},
         ),
         AppSizes.p16.verticalSpace,
@@ -56,6 +57,7 @@ class SocialAuthButtons extends StatelessWidget {
             Icons.admin_panel_settings_outlined,
             color: AppColors.primary,
           ),
+          isDisabled: isLoading,
           onPressed: isLoading
               ? null
               : () {
