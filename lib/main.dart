@@ -9,10 +9,13 @@ import 'app.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (Firebase.apps.isEmpty) {
+  try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+  } on FirebaseException catch (e) {
+    // Native Firebase (google-services) may already create [DEFAULT].
+    if (e.code != 'duplicate-app') rethrow;
   }
   await EasyLocalization.ensureInitialized();
   await setupGetIt();

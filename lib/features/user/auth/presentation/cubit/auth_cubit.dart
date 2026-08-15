@@ -32,7 +32,7 @@ class AuthCubit extends Cubit<AuthStates> {
   }
 
   Future<void> signInWithGoogle() async {
-    emit(const AuthLoading());
+    emit(const GoogleAuthLoading());
     try {
       final credential = await _googleService.signInWithGoogle();
       if (credential == null) {
