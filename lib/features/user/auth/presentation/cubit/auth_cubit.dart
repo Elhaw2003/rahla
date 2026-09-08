@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_app/core/services/google_service.dart';
 import 'package:travel_app/features/user/auth/data/models/register_request_model.dart';
@@ -41,13 +42,14 @@ class AuthCubit extends Cubit<AuthStates> {
       }
 
       final idToken = await credential.user?.getIdToken();
-      print('idToken: $idToken');
+      debugPrint('idToken: $idToken');
       if (idToken == null || idToken.isEmpty) {
         emit(const AuthFailure(message: 'خطأ في التسجيل بواسطة الجوجل'));
         return;
       }
 
       final result = await _authRepo.signInWithGoogle(idToken: idToken);
+      debugPrint('result: $result');
       result.fold(
         (failure) => emit(AuthFailure(message: failure.message)),
         (success) => emit(GoogleLoginSuccess(loginResponse: success)),

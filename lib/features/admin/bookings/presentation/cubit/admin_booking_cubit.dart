@@ -163,4 +163,48 @@ class AdminBookingCubit extends Cubit<AdminBookingStates> {
     _currentStatus = status;
     _emitFilteredStates();
   }
+
+  Future<void> approveBooking(String bookingId) async {
+    final previousState = state;
+    if (previousState is! AdminBookingSuccess) return;
+    emit(AdminBookingApproveLoading(bookingId: bookingId));
+    final result = await adminBookingRepo.approveBooking(bookingId);
+    result.fold(
+      (failure) {
+        emit(AdminBookingApproveError(error: failure.message));
+      },
+      (booking) {
+        final index = _allBookings.indexWhere(
+          (element) => element.id == bookingId,
+        );
+        if (index != -1) {
+          _allBookings[index] = booking;
+        }
+        emit(AdminBookingApproveSuccess(booking: booking));
+        _emitFilteredStates();
+      },
+    );
+  }
+
+  Future<void> rejectBooking(String bookingId) async {
+    final previousState = state;
+    if (previousState is! AdminBookingSuccess) return;
+    emit(AdminBookingRejectLoading(bookingId: bookingId));
+    final result = await adminBookingRepo.rejectBooking(bookingId);
+    result.fold(
+      (failure) {
+        emit(AdminBookingRejectError(error: failure.message));
+      },
+      (booking) {
+        final index = _allBookings.indexWhere(
+          (element) => element.id == bookingId,
+        );
+        if (index != -1) {
+          _allBookings[index] = booking;
+        }
+        emit(AdminBookingRejectSuccess(booking: booking));
+        _emitFilteredStates();
+      },
+    );
+  }
 }

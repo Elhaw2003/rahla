@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
-import 'package:travel_app/core/router/route_names.dart';
 import 'package:travel_app/core/shared/widgets/app_network_image.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
+import 'package:travel_app/features/admin/bookings/presentation/cubit/admin_booking_cubit.dart';
+import 'package:travel_app/features/admin/bookings/presentation/pages/admin_booking_details_page.dart';
 
 class AdminBookingCard extends StatelessWidget {
   final String customerName;
@@ -18,6 +19,16 @@ class AdminBookingCard extends StatelessWidget {
   final String passengersCount;
   final String tripImage;
   final String status; // 'pending', 'accepted', 'rejected'
+  final String bookingNumber;
+  final String requestDate;
+  final String customerNotes;
+  final String origin;
+  final String destination;
+  final String tripDuration;
+  final String customerImage;
+  final String bookingId;
+  final bool isApproveLoading;
+  final bool isRejectLoading;
   final VoidCallback? onAccept;
   final VoidCallback? onReject;
   final VoidCallback? onTap;
@@ -33,6 +44,16 @@ class AdminBookingCard extends StatelessWidget {
     required this.passengersCount,
     required this.tripImage,
     required this.status,
+    this.bookingNumber = '',
+    this.requestDate = '',
+    this.customerNotes = '',
+    this.origin = '',
+    this.destination = '',
+    this.tripDuration = '',
+    this.customerImage = '',
+    this.bookingId = '',
+    this.isApproveLoading = false,
+    this.isRejectLoading = false,
     this.onAccept,
     this.onReject,
     this.onTap,
@@ -44,19 +65,33 @@ class AdminBookingCard extends StatelessWidget {
       onTap:
           onTap ??
           () {
-            context.push(
-              RouteNames.adminBookingDetails,
-              extra: {
-                'customerName': customerName,
-                'customerEmail': customerEmail,
-                'customerPhone': customerPhone,
-                'tripTitle': tripTitle,
-                'tripDates': tripDates,
-                'totalAmount': totalAmount,
-                'passengersCount': passengersCount,
-                'tripImage': tripImage,
-                'status': status,
-              },
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => BlocProvider.value(
+                  value: context.read<AdminBookingCubit>(),
+                  child: AdminBookingDetailsPage(
+                    bookingData: {
+                      'customerName': customerName,
+                      'customerEmail': customerEmail,
+                      'customerPhone': customerPhone,
+                      'customerImage': customerImage,
+                      'tripTitle': tripTitle,
+                      'tripDates': tripDates,
+                      'tripDuration': tripDuration,
+                      'totalAmount': totalAmount,
+                      'passengersCount': passengersCount,
+                      'tripImage': tripImage,
+                      'status': status,
+                      'bookingNumber': bookingNumber,
+                      'requestDate': requestDate,
+                      'customerNotes': customerNotes,
+                      'origin': origin,
+                      'destination': destination,
+                      'bookingId': bookingId,
+                    },
+                  ),
+                ),
+              ),
             );
           },
       borderRadius: BorderRadius.circular(AppSizes.r12),
@@ -312,19 +347,12 @@ class AdminBookingCard extends StatelessWidget {
 
   Widget _buildBottomSection() {
     if (status == 'pending') {
+      final isBusy = isApproveLoading || isRejectLoading;
       return Row(
         children: [
           Expanded(
-            child: OutlinedButton.icon(
-              onPressed: onReject,
-              icon: const Icon(Icons.close, color: AppColors.error),
-              label: Text(
-                AppStrings.adminRejectRequest,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.error,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            child: OutlinedButton(
+              onPressed: isBusy ? null : onReject,
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: AppColors.error),
                 padding: EdgeInsets.symmetric(vertical: AppSizes.p8),
@@ -332,20 +360,35 @@ class AdminBookingCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSizes.r8),
                 ),
               ),
+              child: isRejectLoading
+                  ? SizedBox(
+                      height: 18.h,
+                      width: 18.w,
+                      child: const CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.error,
+                      ),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.close, color: AppColors.error),
+                        SizedBox(width: AppSizes.p8),
+                        Text(
+                          AppStrings.adminRejectRequest,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.error,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
             ),
           ),
           SizedBox(width: AppSizes.p12),
           Expanded(
-            child: ElevatedButton.icon(
-              onPressed: onAccept,
-              icon: const Icon(Icons.check, color: Colors.white),
-              label: Text(
-                AppStrings.adminAcceptRequest,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            child: ElevatedButton(
+              onPressed: isBusy ? null : onAccept,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 padding: EdgeInsets.symmetric(vertical: AppSizes.p8),
@@ -353,6 +396,29 @@ class AdminBookingCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSizes.r8),
                 ),
               ),
+              child: isApproveLoading
+                  ? SizedBox(
+                      height: 18.h,
+                      width: 18.w,
+                      child: const CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.check, color: Colors.white),
+                        SizedBox(width: AppSizes.p8),
+                        Text(
+                          AppStrings.adminAcceptRequest,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
             ),
           ),
         ],

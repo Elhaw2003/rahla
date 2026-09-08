@@ -12,4 +12,8 @@ class EndPoints {
   static const String categories = "categories";
   static const String addTrip = "trips";
   static const String adminBookings = "bookings";
+  static String approveBooking(String bookingId) =>
+      "$adminBookings/$bookingId/approve";
+  static String rejectBooking(String bookingId) =>
+      "$adminBookings/$bookingId/reject";
 }

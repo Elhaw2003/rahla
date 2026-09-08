@@ -39,4 +39,44 @@ class AdminBookingRepo {
       return Left(UnexpectedFailure(e.toString()));
     }
   }
+
+  Future<Either<Failure, AdminBookingModel>> approveBooking(
+    String bookingId,
+  ) async {
+    try {
+      final response = await apiConsumer.patch(
+        EndPoints.approveBooking(bookingId),
+      );
+      final json = Map<String, dynamic>.from(response as Map);
+      final data = json['data'];
+      if (data is! Map) {
+        return Left(UnexpectedFailure('Invalid booking response'));
+      }
+      return Right(AdminBookingModel.fromJson(Map<String, dynamic>.from(data)));
+    } on AppException catch (e) {
+      return Left(mapExceptionToFailure(e));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, AdminBookingModel>> rejectBooking(
+    String bookingId,
+  ) async {
+    try {
+      final response = await apiConsumer.patch(
+        EndPoints.rejectBooking(bookingId),
+      );
+      final json = Map<String, dynamic>.from(response as Map);
+      final data = json['data'];
+      if (data is! Map) {
+        return Left(UnexpectedFailure('Invalid booking response'));
+      }
+      return Right(AdminBookingModel.fromJson(Map<String, dynamic>.from(data)));
+    } on AppException catch (e) {
+      return Left(mapExceptionToFailure(e));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
 }
