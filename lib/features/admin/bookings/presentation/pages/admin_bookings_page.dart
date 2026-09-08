@@ -26,6 +26,7 @@ class AdminBookingsPage extends StatefulWidget {
 
 class _AdminBookingsPageState extends State<AdminBookingsPage> {
   final ScrollController _scrollController = ScrollController();
+  AdminBookingSuccess? _lastSuccess;
 
   static const _filterStatuses = ['all', 'pending', 'approved', 'rejected'];
 
@@ -72,6 +73,22 @@ class _AdminBookingsPageState extends State<AdminBookingsPage> {
     return '${format.format(start)} - ${format.format(end)}';
   }
 
+  String _formatDuration(DateTime start, DateTime end) {
+    final days = end.difference(start).inDays.abs();
+    if (days <= 1) return '1 يوم / 1 ليلة';
+    return '$days أيام / ${days - 1} ليلة';
+  }
+
+  String _formatRequestDate(DateTime date) {
+    return DateFormat('d MMMM yyyy - hh:mm a', 'ar').format(date.toLocal());
+  }
+
+  String _shortBookingNumber(String id) {
+    if (id.isEmpty) return '';
+    final short = id.length > 8 ? id.substring(id.length - 8) : id;
+    return '#${short.toUpperCase()}';
+  }
+
   String _cardStatus(String status) {
     if (status == 'approved') return 'accepted';
     return status;
@@ -81,24 +98,92 @@ class _AdminBookingsPageState extends State<AdminBookingsPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<AdminBookingCubit, AdminBookingStates>(
       listener: (context, state) {
-        if (state is AdminBookingError) {
+        if (state is AdminBookingSuccess) {
+          _lastSuccess = state;
+        } else if (state is AdminBookingError) {
           AppSnackbar.showError(context: context, message: state.error);
+        } else if (state is AdminBookingApproveError ||
+            state is AdminBookingRejectError) {
+          final message = state is AdminBookingApproveError
+              ? state.error
+              : (state as AdminBookingRejectError).error;
+          AppSnackbar.showError(context: context, message: message);
+          final filter = _lastSuccess?.status ?? 'all';
+          context.read<AdminBookingCubit>().selectStatus(filter);
+        } else if (state is AdminBookingApproveSuccess) {
+          AppSnackbar.showSuccess(
+            context: context,
+            message: AppStrings.adminAcceptedBanner,
+          );
+        } else if (state is AdminBookingRejectSuccess) {
+          AppSnackbar.showSuccess(
+            context: context,
+            message: AppStrings.adminRejectedBanner,
+          );
         }
       },
       builder: (context, state) {
-        final pendingCount = state is AdminBookingSuccess
-            ? state.pendingBookingsCount
-            : 0;
-        final acceptedCount = state is AdminBookingSuccess
-            ? state.approvedBookingsCount
-            : 0;
-        final rejectedCount = state is AdminBookingSuccess
-            ? state.rejectedBookingsCount
-            : 0;
-        final allCount = state is AdminBookingSuccess ? state.total : 0;
-        final selectedFilterIndex = state is AdminBookingSuccess
-            ? _filterStatuses.indexOf(state.status)
-            : 0;
+        if (state is AdminBookingSuccess) {
+          _lastSuccess = state;
+        }
+
+        final success = state is AdminBookingSuccess ? state : _lastSuccess;
+        final approveLoadingId = state is AdminBookingApproveLoading
+            ? state.bookingId
+            : '';
+        final rejectLoadingId = state is AdminBookingRejectLoading
+            ? state.bookingId
+            : '';
+
+        if (success == null) {
+          if (state is AdminBookingError) {
+            return Scaffold(
+              backgroundColor: AppColors.background,
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => context.pop(),
+                ),
+                title: Text(
+                  AppStrings.adminBookingRequestsTitle,
+                  style: AppTextStyles.titleLarge,
+                ),
+                centerTitle: true,
+              ),
+              body: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(AppSizes.p24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        state.error,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: AppSizes.p16),
+                      AppButton(
+                        text: 'إعادة المحاولة',
+                        onPressed: () =>
+                            context.read<AdminBookingCubit>().getAdminBookings(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+
+          return const Scaffold(body: AppLoading());
+        }
+
+        final pendingCount = success.pendingBookingsCount;
+        final acceptedCount = success.approvedBookingsCount;
+        final rejectedCount = success.rejectedBookingsCount;
+        final allCount = success.total;
+        final selectedFilterIndex = _filterStatuses.indexOf(success.status);
 
         final filterTabs = [
           '${AppStrings.bookingsFilterAll} ($allCount)',
@@ -150,9 +235,11 @@ class _AdminBookingsPageState extends State<AdminBookingsPage> {
           body: SafeArea(
             child: _buildBody(
               context,
-              state,
+              success,
               filterTabs,
               selectedFilterIndex < 0 ? 0 : selectedFilterIndex,
+              approveLoadingId,
+              rejectLoadingId,
             ),
           ),
         );
@@ -162,44 +249,12 @@ class _AdminBookingsPageState extends State<AdminBookingsPage> {
 
   Widget _buildBody(
     BuildContext context,
-    AdminBookingStates state,
+    AdminBookingSuccess state,
     List<String> filterTabs,
     int selectedFilterIndex,
+    String approveLoadingId,
+    String rejectLoadingId,
   ) {
-    if (state is AdminBookingLoading || state is AdminBookingInitial) {
-      return const AppLoading();
-    }
-
-    if (state is AdminBookingError) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.all(AppSizes.p24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                state.error,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: AppSizes.p16),
-              AppButton(
-                text: 'إعادة المحاولة',
-                onPressed: () =>
-                    context.read<AdminBookingCubit>().getAdminBookings(),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    if (state is! AdminBookingSuccess) {
-      return const SizedBox.shrink();
-    }
-
     final tripOptions = [
       AppStrings.adminFilterAllTrips,
       ...state.data.bookings.map((booking) => booking.trip.title).toSet(),
@@ -323,11 +378,17 @@ class _AdminBookingsPageState extends State<AdminBookingsPage> {
 
                   final booking = bookings[index];
                   return AdminBookingCard(
+                    bookingId: booking.id,
                     customerName: booking.user.fullName,
                     customerEmail: booking.user.email,
                     customerPhone: booking.user.phone,
+                    customerImage: _imageUrl(booking.user.profileImage),
                     tripTitle: booking.trip.title,
                     tripDates: _formatDates(
+                      booking.trip.startDate,
+                      booking.trip.endDate,
+                    ),
+                    tripDuration: _formatDuration(
                       booking.trip.startDate,
                       booking.trip.endDate,
                     ),
@@ -335,8 +396,23 @@ class _AdminBookingsPageState extends State<AdminBookingsPage> {
                     passengersCount: '${booking.numberOfSeats} بالغ',
                     tripImage: _imageUrl(booking.trip.coverImage),
                     status: _cardStatus(booking.status),
-                    onAccept: () {},
-                    onReject: () {},
+                    bookingNumber: _shortBookingNumber(booking.id),
+                    requestDate: _formatRequestDate(booking.createdAt),
+                    customerNotes: booking.notes,
+                    origin: booking.trip.origin,
+                    destination: booking.trip.destination,
+                    isApproveLoading: approveLoadingId == booking.id,
+                    isRejectLoading: rejectLoadingId == booking.id,
+                    onAccept: () {
+                      context.read<AdminBookingCubit>().approveBooking(
+                        booking.id,
+                      );
+                    },
+                    onReject: () {
+                      context.read<AdminBookingCubit>().rejectBooking(
+                        booking.id,
+                      );
+                    },
                   );
                 },
               ).expanded(),

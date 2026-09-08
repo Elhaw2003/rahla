@@ -32,6 +32,8 @@ class AdminBookingSuccess extends AdminBookingStates {
   final int approvedBookingsCount;
   final int rejectedBookingsCount;
   final String status;
+  final String processingBookingId;
+  final String processingAction;
   const AdminBookingSuccess({
     required this.data,
     required this.total,
@@ -45,6 +47,8 @@ class AdminBookingSuccess extends AdminBookingStates {
     required this.approvedBookingsCount,
     required this.rejectedBookingsCount,
     this.status = 'all',
+    this.processingBookingId = '',
+    this.processingAction = '',
   });
   AdminBookingSuccess copyWith({
     AdminBookingDataModel? data,
@@ -59,6 +63,8 @@ class AdminBookingSuccess extends AdminBookingStates {
     int? approvedBookingsCount,
     int? rejectedBookingsCount,
     String? status,
+    String? processingBookingId,
+    String? processingAction,
   }) => AdminBookingSuccess(
     data: data ?? this.data,
     total: total ?? this.total,
@@ -72,6 +78,8 @@ class AdminBookingSuccess extends AdminBookingStates {
     approvedBookingsCount: approvedBookingsCount ?? this.approvedBookingsCount,
     rejectedBookingsCount: rejectedBookingsCount ?? this.rejectedBookingsCount,
     status: status ?? this.status,
+    processingBookingId: processingBookingId ?? this.processingBookingId,
+    processingAction: processingAction ?? this.processingAction,
   );
 
   @override
@@ -88,12 +96,56 @@ class AdminBookingSuccess extends AdminBookingStates {
     approvedBookingsCount,
     rejectedBookingsCount,
     status,
+    processingBookingId,
+    processingAction,
   ];
 }
 
 class AdminBookingError extends AdminBookingStates {
   final String error;
   const AdminBookingError({required this.error});
+  @override
+  List<Object> get props => [error];
+}
+
+class AdminBookingApproveLoading extends AdminBookingStates {
+  final String bookingId;
+  const AdminBookingApproveLoading({required this.bookingId});
+  @override
+  List<Object> get props => [bookingId];
+}
+
+class AdminBookingApproveSuccess extends AdminBookingStates {
+  final AdminBookingModel booking;
+  const AdminBookingApproveSuccess({required this.booking});
+  @override
+  List<Object> get props => [booking];
+}
+
+class AdminBookingApproveError extends AdminBookingStates {
+  final String error;
+  const AdminBookingApproveError({required this.error});
+  @override
+  List<Object> get props => [error];
+}
+
+class AdminBookingRejectLoading extends AdminBookingStates {
+  final String bookingId;
+  const AdminBookingRejectLoading({required this.bookingId});
+  @override
+  List<Object> get props => [bookingId];
+}
+
+class AdminBookingRejectSuccess extends AdminBookingStates {
+  final AdminBookingModel booking;
+  const AdminBookingRejectSuccess({required this.booking});
+  @override
+  List<Object> get props => [booking];
+}
+
+class AdminBookingRejectError extends AdminBookingStates {
+  final String error;
+  const AdminBookingRejectError({required this.error});
   @override
   List<Object> get props => [error];
 }
