@@ -21,16 +21,12 @@ class HomeCubit extends Cubit<HomeStates> {
 
   Future<void> loadHome() async {
     emit(const HomeLoading());
-    await Future.wait([
-      getTrips(showLoading: false),
-      getOffers(),
-    ]);
+    await Future.wait([getTrips(), getOffers()]);
+    _emitSuccess();
   }
 
-  Future<void> getTrips({bool showLoading = true}) async {
-    _page = 1;
-    if (showLoading) emit(const HomeLoading());
-
+  Future<void> getTrips() async {
+    emit(const HomeLoading());
     final result = await _homeRepo.getTrips(
       page: _page,
       limit: _limit,
@@ -47,7 +43,6 @@ class HomeCubit extends Cubit<HomeStates> {
         _page = tripsData.currentPage == 0 ? 1 : tripsData.currentPage;
         _limit = tripsData.pageSize == 0 ? _limit : tripsData.pageSize;
         _hasMore = _page < tripsData.totalPages;
-        _emitSuccess();
       },
     );
   }
@@ -92,7 +87,6 @@ class HomeCubit extends Cubit<HomeStates> {
       },
       (offers) {
         _offers = offers;
-        _emitSuccess();
       },
     );
   }
