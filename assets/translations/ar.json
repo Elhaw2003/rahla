@@ -252,5 +252,13 @@
     "bookingRejectedDesc": "تم رفض طلب الحجز وإبلاغ العميل",
     "bookingPendingTitle": "الحجز قيد الانتظار",
     "bookingPendingDesc": "الطلب بانتظار مراجعة وقبول الأدمن"
+  },
+  "copied": " للحافظة {data} تم النسخ",
+  "@copied": {
+    "placeholder": {
+      "data": {
+        "type": "string"
+      }
+    }
   }
 }

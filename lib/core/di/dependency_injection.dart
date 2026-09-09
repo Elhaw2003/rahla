@@ -21,6 +21,9 @@ import 'package:travel_app/features/admin/bookings/presentation/cubit/admin_book
 import 'package:travel_app/core/services/google_service.dart';
 import 'package:travel_app/features/user/auth/data/repo/auth_repo.dart';
 import 'package:travel_app/features/user/auth/presentation/cubit/auth_cubit.dart';
+import 'package:travel_app/features/user/home/data/repo/home_repo.dart';
+import 'package:travel_app/features/user/home/data/repo/home_repo_implementation.dart';
+import 'package:travel_app/features/user/home/presentation/cubit/home_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -105,5 +108,13 @@ Future<void> setupGetIt() async {
   );
   getIt.registerFactory<AdminBookingCubit>(
     () => AdminBookingCubit(adminBookingRepo: getIt<AdminBookingRepo>()),
+  );
+
+  // Features - User Home
+  getIt.registerLazySingleton<HomeRepo>(
+    () => HomeRepoImplementation(apiConsumer: getIt<ApiConsumer>()),
+  );
+  getIt.registerFactory<HomeCubit>(
+    () => HomeCubit(homeRepo: getIt<HomeRepo>()),
   );
 }

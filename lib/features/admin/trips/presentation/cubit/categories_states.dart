@@ -10,10 +10,14 @@ abstract class CategoriesStates extends Equatable {
 
 class CategoriesInitial extends CategoriesStates {
   const CategoriesInitial();
+  @override
+  List<Object?> get props => [];
 }
 
 class CategoriesLoading extends CategoriesStates {
   const CategoriesLoading();
+  @override
+  List<Object?> get props => [];
 }
 
 class CategoriesSuccess extends CategoriesStates {

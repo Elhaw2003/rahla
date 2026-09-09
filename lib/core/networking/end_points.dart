@@ -16,4 +16,6 @@ class EndPoints {
       "$adminBookings/$bookingId/approve";
   static String rejectBooking(String bookingId) =>
       "$adminBookings/$bookingId/reject";
+  static const String getTrips = "trips";
+  static const String getActiveOffer = "offers";
 }

@@ -252,5 +252,13 @@
     "bookingRejectedDesc": "Booking request rejected and customer notified",
     "bookingPendingTitle": "Booking Pending",
     "bookingPendingDesc": "Request awaiting admin review and acceptance"
+  },
+  "copied": "Copied to clipboard: {data}",
+  "@copied": {
+    "placeholder": {
+      "data": {
+        "type": "string"
+      }
+    }
   }
 }

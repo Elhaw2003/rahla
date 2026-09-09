@@ -6,6 +6,7 @@ import 'package:travel_app/features/user/splash/presentation/pages/splash_page.d
 import 'package:travel_app/features/user/auth/presentation/cubit/auth_cubit.dart';
 import 'package:travel_app/features/user/auth/presentation/pages/login_page.dart';
 import 'package:travel_app/features/user/auth/presentation/pages/register_page.dart';
+import 'package:travel_app/features/user/home/presentation/cubit/home_cubit.dart';
 import 'package:travel_app/features/user/home/presentation/pages/home_page.dart';
 import 'package:travel_app/features/user/home/presentation/pages/trip_details_page.dart';
 import 'package:travel_app/features/user/bookings/presentation/pages/booking_confirmation_page.dart';
@@ -51,7 +52,13 @@ class AppRouter {
       ),
       GoRoute(
         path: RouteNames.home,
-        builder: (context, state) => const HomePage(),
+        builder: (context, state) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => getIt<HomeCubit>()),
+            BlocProvider(create: (_) => getIt<CategoriesCubit>()),
+          ],
+          child: const HomePage(),
+        ),
       ),
       GoRoute(
         path: RouteNames.tripDetails,
