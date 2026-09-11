@@ -88,6 +88,9 @@ class AdminTripModel {
   final String? createdAt;
   final String? updatedAt;
   final int? v;
+  final bool isFavorite;
+  final bool isBooked;
+  final String? bookingStatus;
 
   AdminTripModel({
     this.id,
@@ -115,6 +118,9 @@ class AdminTripModel {
     this.createdAt,
     this.updatedAt,
     this.v,
+    this.isFavorite = false,
+    this.isBooked = false,
+    this.bookingStatus,
   });
 
   factory AdminTripModel.fromJson(Map<String, dynamic> json) {
@@ -162,6 +168,9 @@ class AdminTripModel {
       createdAt: json['createdAt'] as String?,
       updatedAt: json['updatedAt'] as String?,
       v: json['__v'] as int?,
+      isFavorite: json['isFavorite'] as bool? ?? false,
+      isBooked: json['isBooked'] as bool? ?? false,
+      bookingStatus: json['bookingStatus'] as String?,
     );
   }
 }

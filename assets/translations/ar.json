@@ -75,6 +75,14 @@
     "navFavorites": "المفضلة",
     "navMore": "المزيد"
   },
+  "explore": {
+    "title": "استكشف",
+    "subtitle": "اكتشف مغامرتك القادمة",
+    "tripsCount": "{count} رحلة",
+    "emptyTitle": "لا توجد رحلات بعد",
+    "emptySubtitle": "جرّب فئة أخرى لاكتشاف أماكن جديدة",
+    "retry": "إعادة المحاولة"
+  },
   "bookings": {
     "title": "حجوزاتي",
     "filterAll": "الكل",

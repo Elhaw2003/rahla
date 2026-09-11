@@ -80,6 +80,15 @@ class AppStrings {
   static String get homeNavFavorites => 'home.navFavorites'.tr();
   static String get homeNavMore => 'home.navMore'.tr();
 
+  // Explore
+  static String get exploreTitle => 'explore.title'.tr();
+  static String get exploreSubtitle => 'explore.subtitle'.tr();
+  static String exploreTripsCount(int count) =>
+      'explore.tripsCount'.tr(namedArgs: {'count': '$count'});
+  static String get exploreEmptyTitle => 'explore.emptyTitle'.tr();
+  static String get exploreEmptySubtitle => 'explore.emptySubtitle'.tr();
+  static String get exploreRetry => 'explore.retry'.tr();
+
   // Bookings
   static String get bookingsTitle => 'bookings.title'.tr();
   static String get bookingsFilterAll => 'bookings.filterAll'.tr();

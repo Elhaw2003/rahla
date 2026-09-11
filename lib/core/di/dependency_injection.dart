@@ -21,6 +21,9 @@ import 'package:travel_app/features/admin/bookings/presentation/cubit/admin_book
 import 'package:travel_app/core/services/google_service.dart';
 import 'package:travel_app/features/user/auth/data/repo/auth_repo.dart';
 import 'package:travel_app/features/user/auth/presentation/cubit/auth_cubit.dart';
+import 'package:travel_app/features/user/explore/data/repo/explore_repo.dart';
+import 'package:travel_app/features/user/explore/data/repo/explore_repo_implementation.dart';
+import 'package:travel_app/features/user/explore/presentation/cubit/explore_cubit.dart';
 import 'package:travel_app/features/user/home/data/repo/home_repo.dart';
 import 'package:travel_app/features/user/home/data/repo/home_repo_implementation.dart';
 import 'package:travel_app/features/user/home/presentation/cubit/home_cubit.dart';
@@ -116,5 +119,13 @@ Future<void> setupGetIt() async {
   );
   getIt.registerFactory<HomeCubit>(
     () => HomeCubit(homeRepo: getIt<HomeRepo>()),
+  );
+
+  // Features - User Explore
+  getIt.registerLazySingleton<ExploreRepo>(
+    () => ExploreRepoImplementation(apiConsumer: getIt<ApiConsumer>()),
+  );
+  getIt.registerFactory<ExploreCubit>(
+    () => ExploreCubit(exploreRepo: getIt<ExploreRepo>()),
   );
 }
