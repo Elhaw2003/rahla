@@ -75,6 +75,14 @@
     "navFavorites": "Favorites",
     "navMore": "More"
   },
+  "explore": {
+    "title": "Explore",
+    "subtitle": "Find your next adventure",
+    "tripsCount": "{count} trips",
+    "emptyTitle": "No trips yet",
+    "emptySubtitle": "Try another category to discover more places",
+    "retry": "Try again"
+  },
   "bookings": {
     "title": "My Bookings",
     "filterAll": "All",

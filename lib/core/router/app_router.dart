@@ -23,6 +23,8 @@ import 'package:travel_app/features/admin/trips/presentation/pages/admin_trips_p
 import 'package:travel_app/features/admin/bookings/presentation/cubit/admin_booking_cubit.dart';
 import 'package:travel_app/features/admin/bookings/presentation/pages/admin_bookings_page.dart';
 import 'package:travel_app/features/admin/bookings/presentation/pages/admin_booking_details_page.dart';
+import 'package:travel_app/features/user/explore/presentation/cubit/explore_cubit.dart';
+import 'package:travel_app/features/user/explore/presentation/pages/explore_page.dart';
 import 'route_names.dart';
 
 class AppRouter {
@@ -59,6 +61,22 @@ class AppRouter {
           ],
           child: const HomePage(),
         ),
+      ),
+      GoRoute(
+        path: RouteNames.explore,
+        builder: (context, state) {
+          final categorySlug =
+              state.uri.queryParameters['category'] ?? '';
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (_) => getIt<ExploreCubit>()),
+              BlocProvider(
+                create: (_) => getIt<CategoriesCubit>()..getCategories(),
+              ),
+            ],
+            child: ExplorePage(initialCategorySlug: categorySlug),
+          );
+        },
       ),
       GoRoute(
         path: RouteNames.tripDetails,
