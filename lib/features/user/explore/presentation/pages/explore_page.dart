@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
+import 'package:travel_app/core/router/route_names.dart';
 import 'package:travel_app/core/shared/widgets/app_shimmer.dart';
+import 'package:travel_app/core/shared/widgets/app_snackbar.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
 import 'package:travel_app/features/admin/trips/data/models/categories_response_model.dart';
 import 'package:travel_app/features/admin/trips/presentation/cubit/categories_cubit.dart';
@@ -15,6 +17,8 @@ import 'package:travel_app/features/user/explore/presentation/widgets/explore_ca
 import 'package:travel_app/features/user/explore/presentation/widgets/explore_scroll_intro.dart';
 import 'package:travel_app/features/user/explore/presentation/widgets/explore_shimmer_loading.dart';
 import 'package:travel_app/features/user/explore/presentation/widgets/explore_trips_list.dart';
+import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_cubit.dart';
+import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_states.dart';
 
 class ExplorePage extends StatefulWidget {
   final String initialCategorySlug;
@@ -162,7 +166,25 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CategoriesCubit, CategoriesStates>(
+    return BlocListener<FavoritesCubit, FavoritesStates>(
+      listenWhen: (_, current) =>
+          current is FavoritesToggleSuccess ||
+          current is FavoritesToggleFailure,
+      listener: (context, state) {
+        if (state is FavoritesToggleSuccess) {
+          AppSnackbar.showSuccess(
+            context: context,
+            message: state.message,
+            actionLabel: state.isFavorite ? AppStrings.viewAll : null,
+            onAction: state.isFavorite
+                ? () => context.push(RouteNames.favorites)
+                : null,
+          );
+        } else if (state is FavoritesToggleFailure) {
+          AppSnackbar.showError(context: context, message: state.message);
+        }
+      },
+      child: BlocBuilder<CategoriesCubit, CategoriesStates>(
       builder: (context, categoriesState) {
         final categories = categoriesState is CategoriesSuccess
             ? categoriesState.categories
@@ -259,6 +281,7 @@ class _ExplorePageState extends State<ExplorePage> {
           },
         );
       },
+    ),
     );
   }
 }

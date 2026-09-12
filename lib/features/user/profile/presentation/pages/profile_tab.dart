@@ -48,7 +48,7 @@ class ProfileTab extends StatelessWidget {
           children: [
             _buildHeader(),
             AppSizes.p32.verticalSpace,
-            _buildOptionsList(),
+            _buildOptionsList(context),
             AppSizes.p32.verticalSpace,
             _buildLogoutButton(),
             AppSizes.p32.verticalSpace,
@@ -106,12 +106,18 @@ class ProfileTab extends StatelessWidget {
     );
   }
 
-  Widget _buildOptionsList() {
+  Widget _buildOptionsList(BuildContext context) {
     return Column(
       children: [
         ProfileMenuItemWidget(
           title: AppStrings.profilePersonalData,
           icon: Icons.person_outline,
+        ),
+        AppSizes.p12.verticalSpace,
+        ProfileMenuItemWidget(
+          title: AppStrings.favoritesTitle,
+          icon: Icons.favorite_outline,
+          onTap: () => context.push(RouteNames.favorites),
         ),
         AppSizes.p12.verticalSpace,
         ProfileMenuItemWidget(

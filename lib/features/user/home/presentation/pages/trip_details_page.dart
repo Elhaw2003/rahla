@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
+import 'package:travel_app/core/router/route_names.dart';
+import 'package:travel_app/core/shared/widgets/app_snackbar.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
 import 'package:travel_app/features/admin/trips/data/models/admin_trips_model.dart';
@@ -76,15 +78,34 @@ class _TripDetailsPageState extends State<TripDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      bottomNavigationBar: TripDetailsStickyFooter(trip: trip),
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          _buildSliverAppBar(),
-          SliverToBoxAdapter(child: _buildBody()),
-        ],
+    return BlocListener<FavoritesCubit, FavoritesStates>(
+      listenWhen: (_, current) =>
+          current is FavoritesToggleSuccess ||
+          current is FavoritesToggleFailure,
+      listener: (context, state) {
+        if (state is FavoritesToggleSuccess) {
+          AppSnackbar.showSuccess(
+            context: context,
+            message: state.message,
+            actionLabel: state.isFavorite ? AppStrings.viewAll : null,
+            onAction: state.isFavorite
+                ? () => context.push(RouteNames.favorites)
+                : null,
+          );
+        } else if (state is FavoritesToggleFailure) {
+          AppSnackbar.showError(context: context, message: state.message);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        bottomNavigationBar: TripDetailsStickyFooter(trip: trip),
+        body: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            _buildSliverAppBar(),
+            SliverToBoxAdapter(child: _buildBody()),
+          ],
+        ),
       ),
     );
   }

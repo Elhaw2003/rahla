@@ -80,3 +80,31 @@ class FavoritesError extends FavoritesStates {
   @override
   List<Object?> get props => [message];
 }
+
+class FavoritesToggleSuccess extends FavoritesStates {
+  final String message;
+  final bool isFavorite;
+  final int id;
+
+  const FavoritesToggleSuccess({
+    required this.message,
+    required this.isFavorite,
+    required this.id,
+  });
+
+  @override
+  List<Object?> get props => [message, isFavorite, id];
+}
+
+class FavoritesToggleFailure extends FavoritesStates {
+  final String message;
+  final int id;
+
+  const FavoritesToggleFailure({
+    required this.message,
+    required this.id,
+  });
+
+  @override
+  List<Object?> get props => [message, id];
+}

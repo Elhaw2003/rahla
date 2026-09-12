@@ -17,6 +17,7 @@ class FavoritesCubit extends Cubit<FavoritesStates> {
   int _totalItems = 0;
   int _totalPages = 0;
   bool _hasMore = false;
+  int _toggleEventId = 0;
 
   bool isFavorite(String tripId, {bool fallback = false}) {
     if (tripId.isEmpty) return fallback;
@@ -36,28 +37,27 @@ class FavoritesCubit extends Cubit<FavoritesStates> {
     emit(const FavoritesLoading());
 
     final result = await _favoritesRepo.getFavorites(_currentPage, _pageSize);
-    result.fold(
-      (failure) => emit(FavoritesError(message: failure.message)),
-      (data) {
-        final uniqueMap = <String, AdminTripModel>{};
-        for (final trip in data.favorites) {
-          final id = trip.id;
-          if (id == null || id.isEmpty) continue;
-          uniqueMap[id] = trip.copyWith(isFavorite: true);
-        }
+    result.fold((failure) => emit(FavoritesError(message: failure.message)), (
+      data,
+    ) {
+      final uniqueMap = <String, AdminTripModel>{};
+      for (final trip in data.favorites) {
+        final id = trip.id;
+        if (id == null || id.isEmpty) continue;
+        uniqueMap[id] = trip.copyWith(isFavorite: true);
+      }
 
-        _favorites = uniqueMap.values.toList();
-        _totalItems = data.totalItems;
-        _totalPages = data.totalPages;
-        _currentPage = data.currentPage == 0 ? 1 : data.currentPage;
-        _hasMore = data.totalPages > 0 && _currentPage < data.totalPages;
-        for (final id in uniqueMap.keys) {
-          _unfavoritedIds.remove(id);
-        }
+      _favorites = uniqueMap.values.toList();
+      _totalItems = data.totalItems;
+      _totalPages = data.totalPages;
+      _currentPage = data.currentPage == 0 ? 1 : data.currentPage;
+      _hasMore = data.totalPages > 0 && _currentPage < data.totalPages;
+      for (final id in uniqueMap.keys) {
+        _unfavoritedIds.remove(id);
+      }
 
-        emit(_loaded());
-      },
-    );
+      emit(_loaded());
+    });
   }
 
   Future<void> loadMoreFavorites() async {
@@ -70,50 +70,53 @@ class FavoritesCubit extends Cubit<FavoritesStates> {
     final nextPage = _currentPage + 1;
     final result = await _favoritesRepo.getFavorites(nextPage, _pageSize);
 
-    result.fold(
-      (failure) => emit(current.copyWith(isLoadingMore: false)),
-      (data) {
-        final uniqueMap = <String, AdminTripModel>{
-          for (final trip in _favorites)
-            if (trip.id != null && trip.id!.isNotEmpty) trip.id!: trip,
-        };
+    result.fold((failure) => emit(current.copyWith(isLoadingMore: false)), (
+      data,
+    ) {
+      final uniqueMap = <String, AdminTripModel>{
+        for (final trip in _favorites)
+          if (trip.id != null && trip.id!.isNotEmpty) trip.id!: trip,
+      };
 
-        for (final trip in data.favorites) {
-          final id = trip.id;
-          if (id == null || id.isEmpty) continue;
-          uniqueMap[id] = trip.copyWith(isFavorite: true);
-          _unfavoritedIds.remove(id);
-        }
+      for (final trip in data.favorites) {
+        final id = trip.id;
+        if (id == null || id.isEmpty) continue;
+        uniqueMap[id] = trip.copyWith(isFavorite: true);
+        _unfavoritedIds.remove(id);
+      }
 
-        _favorites = uniqueMap.values.toList();
-        _totalItems = data.totalItems;
-        _totalPages = data.totalPages;
-        _currentPage = data.currentPage == 0 ? nextPage : data.currentPage;
-        _hasMore = data.totalPages > 0 && _currentPage < data.totalPages;
+      _favorites = uniqueMap.values.toList();
+      _totalItems = data.totalItems;
+      _totalPages = data.totalPages;
+      _currentPage = data.currentPage == 0 ? nextPage : data.currentPage;
+      _hasMore = data.totalPages > 0 && _currentPage < data.totalPages;
 
-        emit(_loaded(isLoadingMore: false));
-      },
-    );
+      emit(_loaded(isLoadingMore: false));
+    });
   }
 
-  /// Same idea as rahala: list presence = favorite.
-  /// Uses backend `isFavorite` to add/remove from the list.
-  Future<bool> toggleFavoriteTrip(AdminTripModel trip) async {
+  Future<void> toggleFavoriteTrip(AdminTripModel trip) async {
     final tripId = trip.id?.trim() ?? '';
-    if (tripId.isEmpty) return false;
+    if (tripId.isEmpty) return;
 
     final currentTrips = List<AdminTripModel>.from(_favorites);
     final toggling = {
-      if (state is FavoritesLoaded) ...(state as FavoritesLoaded).togglingTripIds,
+      if (state is FavoritesLoaded)
+        ...(state as FavoritesLoaded).togglingTripIds,
       tripId,
     };
     emit(_loaded(togglingTripIds: toggling));
 
     final result = await _favoritesRepo.toggleFavorite(tripId: tripId);
-    return result.fold(
+    result.fold(
       (failure) {
+        emit(
+          FavoritesToggleFailure(
+            message: failure.message,
+            id: ++_toggleEventId,
+          ),
+        );
         emit(_loaded(togglingTripIds: {...toggling}..remove(tripId)));
-        return false;
       },
       (toggle) {
         final updated = List<AdminTripModel>.from(currentTrips);
@@ -139,11 +142,13 @@ class FavoritesCubit extends Cubit<FavoritesStates> {
 
         _favorites = updated;
         emit(
-          _loaded(
-            togglingTripIds: {...toggling}..remove(tripId),
+          FavoritesToggleSuccess(
+            message: toggle.message,
+            isFavorite: toggle.isFavorite,
+            id: ++_toggleEventId,
           ),
         );
-        return true;
+        emit(_loaded(togglingTripIds: {...toggling}..remove(tripId)));
       },
     );
   }
@@ -164,3 +169,50 @@ class FavoritesCubit extends Cubit<FavoritesStates> {
     );
   }
 }
+
+
+
+//import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:rahala/features/admin/trips/data/models/trip_model.dart';
+// import 'package:rahala/features/user/favorites/presentation/cubit/favorites_states.dart';
+// import 'package:rahala/features/user/favorites/data/repositories/favorite_repository.dart';
+
+// class FavoritesCubit extends Cubit<FavoritesState> {
+//   final FavoriteRepository favoriteRepository;
+//   FavoritesCubit({required this.favoriteRepository})
+//     : super(const FavoritesInitial());
+
+//   Future<void> getFavoriteTrips() async {
+//     emit(const FavoritesLoading());
+//     final result = await favoriteRepository.getFavoriteTrips();
+//     result.fold((failure) => emit(FavoritesError(failure.message)), (
+//       favorites,
+//     ) {
+//       final uniqueMap = <String, TripModel>{};
+//       for (var trip in favorites) {
+//         uniqueMap[trip.id] = trip.copyWith(isFavorite: true);
+//       }
+//       emit(FavoritesLoaded(favorites: uniqueMap.values.toList()));
+//     });
+//   }
+
+//   Future<bool> toggleFavoriteTrip(TripModel trip) async {
+//     final result = await favoriteRepository.toggleFavoriteTrip(tripId: trip.id);
+
+//     return result.fold((failure) => false, (_) {
+//       if (state is FavoritesLoaded) {
+//         final currentTrips = List<TripModel>.from(
+//           (state as FavoritesLoaded).favorites,
+//         );
+//         final existingIndex = currentTrips.indexWhere((e) => e.id == trip.id);
+//         if (existingIndex != -1) {
+//           currentTrips.removeAt(existingIndex);
+//         } else {
+//           currentTrips.add(trip.copyWith(isFavorite: true));
+//         }
+//         emit(FavoritesLoaded(favorites: currentTrips));
+//       }
+//       return true;
+//     });
+//   }
+// }

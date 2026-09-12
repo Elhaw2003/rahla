@@ -27,6 +27,7 @@ import 'package:travel_app/features/admin/trips/data/models/admin_trips_model.da
 import 'package:travel_app/features/user/explore/presentation/cubit/explore_cubit.dart';
 import 'package:travel_app/features/user/explore/presentation/pages/explore_page.dart';
 import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_cubit.dart';
+import 'package:travel_app/features/user/favorites/presentation/pages/favorites_page.dart';
 import 'route_names.dart';
 
 class AppRouter {
@@ -95,6 +96,13 @@ class AppRouter {
             child: TripDetailsPage(trip: trip),
           );
         },
+      ),
+      GoRoute(
+        path: RouteNames.favorites,
+        builder: (context, state) => BlocProvider.value(
+          value: getIt<FavoritesCubit>(),
+          child: const FavoritesPage(),
+        ),
       ),
       GoRoute(
         path: RouteNames.bookingConfirmation,
