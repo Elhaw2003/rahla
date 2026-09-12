@@ -20,4 +20,7 @@ class EndPoints {
   static const String getActiveOffer = "offers";
   static const String getFavorites = "favorites";
   static String toggleFavorite(String tripId) => "$getFavorites/toggle/$tripId";
+  static const String createUserBooking = "bookings";
+  static const String getUserBookings = "bookings/my";
+  static String getUserBookingById(String bookingId) => "bookings/$bookingId";
 }

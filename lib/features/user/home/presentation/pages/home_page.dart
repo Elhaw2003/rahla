@@ -6,7 +6,7 @@ import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
 import 'package:travel_app/core/router/route_names.dart';
 import 'package:travel_app/core/shared/widgets/app_snackbar.dart';
-import 'package:travel_app/features/user/bookings/presentation/pages/bookings_tab.dart';
+import 'package:travel_app/features/user/home/presentation/pages/tabs/bookings_tab.dart';
 import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_states.dart';
 import 'package:travel_app/features/user/profile/presentation/pages/profile_tab.dart';

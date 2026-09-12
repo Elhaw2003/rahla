@@ -9,7 +9,10 @@ class RouteNames {
   static const String tripDetails = '/trip-details';
   static const String favorites = '/favorites';
   static const String bookingConfirmation = '/booking-confirmation';
-  static const String bookingDetails = '/booking-details';
+  static const String bookingDetails = '/booking-details/:bookingId';
+
+  static String bookingDetailsPath(String bookingId) =>
+      '/booking-details/$bookingId';
   static const String profile = '/profile';
   static const String settings = '/settings';
   static const String adminDashboard = '/admin-dashboard';
