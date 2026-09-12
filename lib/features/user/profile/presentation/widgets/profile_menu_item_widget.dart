@@ -18,12 +18,13 @@ class ProfileMenuItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
+    return Material(
+      color: AppColors.surface,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSizes.r12),
-        border: Border.all(color: AppColors.border),
+        side: const BorderSide(color: AppColors.border),
       ),
+      clipBehavior: Clip.antiAlias,
       child: ListTile(
         contentPadding: EdgeInsets.symmetric(
           horizontal: AppSizes.p16,

@@ -9,8 +9,6 @@ import 'package:travel_app/features/user/auth/presentation/pages/register_page.d
 import 'package:travel_app/features/user/home/presentation/cubit/home_cubit.dart';
 import 'package:travel_app/features/user/home/presentation/pages/home_page.dart';
 import 'package:travel_app/features/user/home/presentation/pages/trip_details_page.dart';
-import 'package:travel_app/features/user/bookings/presentation/pages/booking_confirmation_page.dart';
-import 'package:travel_app/features/user/bookings/presentation/pages/booking_details_page.dart';
 import 'package:travel_app/features/user/profile/presentation/pages/profile_page.dart';
 import 'package:travel_app/features/user/settings/presentation/pages/settings_page.dart';
 import 'package:travel_app/features/admin/dashboard/presentation/cubit/admin_dashboard_cubit.dart';
@@ -28,6 +26,9 @@ import 'package:travel_app/features/user/explore/presentation/cubit/explore_cubi
 import 'package:travel_app/features/user/explore/presentation/pages/explore_page.dart';
 import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:travel_app/features/user/favorites/presentation/pages/favorites_page.dart';
+import 'package:travel_app/features/user/user_booking/presentation/cubit/user_booking_cubit.dart';
+import 'package:travel_app/features/user/user_booking/presentation/pages/booking_details_page.dart';
+import 'package:travel_app/features/user/user_booking/presentation/pages/create_booking_page.dart';
 import 'route_names.dart';
 
 class AppRouter {
@@ -62,6 +63,7 @@ class AppRouter {
             BlocProvider(create: (_) => getIt<HomeCubit>()),
             BlocProvider(create: (_) => getIt<CategoriesCubit>()),
             BlocProvider.value(value: getIt<FavoritesCubit>()),
+            BlocProvider.value(value: getIt<UserBookingCubit>()),
           ],
           child: const HomePage(),
         ),
@@ -69,8 +71,7 @@ class AppRouter {
       GoRoute(
         path: RouteNames.explore,
         builder: (context, state) {
-          final categorySlug =
-              state.uri.queryParameters['category'] ?? '';
+          final categorySlug = state.uri.queryParameters['category'] ?? '';
           return MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => getIt<ExploreCubit>()),
@@ -107,12 +108,30 @@ class AppRouter {
       GoRoute(
         path: RouteNames.bookingConfirmation,
         name: RouteNames.bookingConfirmation,
-        builder: (context, state) => const BookingConfirmationPage(),
+        builder: (context, state) {
+          final trip = state.extra;
+          if (trip is! AdminTripModel) {
+            return const NotFoundPage();
+          }
+          return BlocProvider.value(
+            value: getIt<UserBookingCubit>(),
+            child: CreateBookingPage(trip: trip),
+          );
+        },
       ),
       GoRoute(
         path: RouteNames.bookingDetails,
         name: RouteNames.bookingDetails,
-        builder: (context, state) => const BookingDetailsPage(),
+        builder: (context, state) {
+          final bookingId = state.pathParameters['bookingId'] ?? '';
+          if (bookingId.isEmpty) {
+            return const NotFoundPage();
+          }
+          return BlocProvider.value(
+            value: getIt<UserBookingCubit>(),
+            child: UserBookingDetailsPage(bookingId: bookingId),
+          );
+        },
       ),
       GoRoute(
         path: RouteNames.profile,

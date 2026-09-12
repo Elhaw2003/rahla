@@ -166,8 +166,12 @@ class HomeFeaturedBannerWidget extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                                 minimumSize: Size(0, 32.h),
                               ),
-                              onPressed: () =>
-                                  context.push(RouteNames.bookingConfirmation),
+                              onPressed: trip == null
+                                  ? null
+                                  : () => context.push(
+                                      RouteNames.bookingConfirmation,
+                                      extra: trip,
+                                    ),
                               child: Text(
                                 AppStrings.bookNow,
                                 style: AppTextStyles.labelMedium.copyWith(

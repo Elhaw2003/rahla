@@ -30,6 +30,9 @@ import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_
 import 'package:travel_app/features/user/home/data/repo/home_repo.dart';
 import 'package:travel_app/features/user/home/data/repo/home_repo_implementation.dart';
 import 'package:travel_app/features/user/home/presentation/cubit/home_cubit.dart';
+import 'package:travel_app/features/user/user_booking/data/repo/user_booking_repo.dart';
+import 'package:travel_app/features/user/user_booking/data/repo/user_booking_repo_implementation.dart';
+import 'package:travel_app/features/user/user_booking/presentation/cubit/user_booking_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -135,5 +138,13 @@ Future<void> setupGetIt() async {
   );
   getIt.registerLazySingleton<FavoritesCubit>(
     () => FavoritesCubit(favoritesRepo: getIt<FavoritesRepo>()),
+  );
+
+  // Features - User Booking
+  getIt.registerLazySingleton<UserBookingRepo>(
+    () => UserBookingRepoImplementation(apiConsumer: getIt<ApiConsumer>()),
+  );
+  getIt.registerLazySingleton<UserBookingCubit>(
+    () => UserBookingCubit(userBookingRepo: getIt<UserBookingRepo>()),
   );
 }
