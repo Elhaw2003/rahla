@@ -49,7 +49,9 @@ class HomeFeaturedBannerWidget extends StatelessWidget {
     final imageUrl = _imageUrl(trip?.coverImage);
 
     return GestureDetector(
-      onTap: () => context.push(RouteNames.tripDetails),
+      onTap: trip == null
+          ? null
+          : () => context.push(RouteNames.tripDetails, extra: trip),
       child: Container(
         height: 140.h,
         decoration: BoxDecoration(

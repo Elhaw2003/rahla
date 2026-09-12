@@ -12,10 +12,10 @@ import 'package:travel_app/core/theme/app_text_styles.dart';
 import 'package:travel_app/features/admin/trips/data/models/admin_trips_model.dart';
 import 'package:travel_app/features/user/favorites/presentation/widgets/trip_favorite_button.dart';
 
-class ExploreTripCard extends StatelessWidget {
+class FavoriteCard extends StatelessWidget {
   final AdminTripModel trip;
 
-  const ExploreTripCard({super.key, required this.trip});
+  const FavoriteCard({super.key, required this.trip});
 
   String _imageUrl(String? path) {
     if (path == null || path.isEmpty) return '';
@@ -36,21 +36,19 @@ class ExploreTripCard extends StatelessWidget {
     return destination.isNotEmpty ? destination : (trip.title ?? '');
   }
 
-  String? _categoryLabel(BuildContext context) {
-    final category = trip.category;
-    if (category == null) return null;
-    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
-    if (isArabic && category.nameAr?.isNotEmpty == true) {
-      return category.nameAr;
-    }
-    if (category.nameEn?.isNotEmpty == true) return category.nameEn;
-    return category.nameAr;
+  String? _durationLabel() {
+    final start = DateTime.tryParse(trip.startDate ?? '');
+    final end = DateTime.tryParse(trip.endDate ?? '');
+    if (start == null || end == null) return null;
+    final days = end.difference(start).inDays.abs();
+    if (days <= 1) return '1 يوم / 1 ليلة';
+    return '$days أيام / ${days - 1} ليلة';
   }
 
   @override
   Widget build(BuildContext context) {
     final imageUrl = _imageUrl(trip.coverImage);
-    final categoryLabel = _categoryLabel(context);
+    final duration = _durationLabel();
 
     return GestureDetector(
       onTap: () => context.push(RouteNames.tripDetails, extra: trip),
@@ -92,7 +90,7 @@ class ExploreTripCard extends StatelessWidget {
                     right: AppSizes.p12,
                     child: TripFavoriteButton(trip: trip),
                   ),
-                  if (categoryLabel != null && categoryLabel.isNotEmpty)
+                  if (duration != null)
                     Positioned(
                       top: AppSizes.p12,
                       left: AppSizes.p12,
@@ -106,7 +104,7 @@ class ExploreTripCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(AppSizes.r16),
                         ),
                         child: Text(
-                          categoryLabel,
+                          duration,
                           style: AppTextStyles.labelSmall.copyWith(
                             color: AppColors.surface,
                             fontWeight: FontWeight.w600,
@@ -170,29 +168,6 @@ class ExploreTripCard extends StatelessWidget {
                   AppSizes.p12.verticalSpace,
                   Row(
                     children: [
-                      if (trip.averageRating > 0) ...[
-                        Icon(
-                          Icons.star_rounded,
-                          size: 16.sp,
-                          color: AppColors.secondary,
-                        ),
-                        AppSizes.p4.horizontalSpace,
-                        Text(
-                          trip.averageRating.toStringAsFixed(1),
-                          style: AppTextStyles.labelMedium.copyWith(
-                            color: AppColors.textPrimary,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        if (trip.reviewsCount > 0)
-                          Text(
-                            ' (${trip.reviewsCount})',
-                            style: AppTextStyles.labelSmall.copyWith(
-                              color: AppColors.textHint,
-                            ),
-                          ),
-                        AppSizes.p12.horizontalSpace,
-                      ],
                       Icon(
                         Icons.event_seat_outlined,
                         size: 15.sp,

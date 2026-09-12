@@ -24,6 +24,9 @@ import 'package:travel_app/features/user/auth/presentation/cubit/auth_cubit.dart
 import 'package:travel_app/features/user/explore/data/repo/explore_repo.dart';
 import 'package:travel_app/features/user/explore/data/repo/explore_repo_implementation.dart';
 import 'package:travel_app/features/user/explore/presentation/cubit/explore_cubit.dart';
+import 'package:travel_app/features/user/favorites/data/repo/favorites_repo.dart';
+import 'package:travel_app/features/user/favorites/data/repo/favorites_repo_implementation.dart';
+import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:travel_app/features/user/home/data/repo/home_repo.dart';
 import 'package:travel_app/features/user/home/data/repo/home_repo_implementation.dart';
 import 'package:travel_app/features/user/home/presentation/cubit/home_cubit.dart';
@@ -50,10 +53,7 @@ Future<void> setupGetIt() async {
     () => DioFactory.createDio(getIt<SecureStorageCaching>()),
   );
   getIt.registerLazySingleton<ApiConsumer>(
-    () => DioConsumer(
-      dio: getIt<Dio>(),
-      networkInfo: getIt<NetworkInfo>(),
-    ),
+    () => DioConsumer(dio: getIt<Dio>(), networkInfo: getIt<NetworkInfo>()),
   );
 
   // Features - Auth
@@ -127,5 +127,13 @@ Future<void> setupGetIt() async {
   );
   getIt.registerFactory<ExploreCubit>(
     () => ExploreCubit(exploreRepo: getIt<ExploreRepo>()),
+  );
+
+  // Features - User Favorites
+  getIt.registerLazySingleton<FavoritesRepo>(
+    () => FavoritesRepoImplementation(apiConsumer: getIt<ApiConsumer>()),
+  );
+  getIt.registerLazySingleton<FavoritesCubit>(
+    () => FavoritesCubit(favoritesRepo: getIt<FavoritesRepo>()),
   );
 }

@@ -110,9 +110,13 @@ class AppStrings {
   static String get tripDetailsAvailableSeats =>
       'tripDetails.availableSeats'.tr();
   static String get tripDetailsDays => 'tripDetails.days'.tr();
+  static String get tripDetailsCapacity => 'tripDetails.capacity'.tr();
   static String get tripDetailsTransportIncluded =>
       'tripDetails.transport Included'.tr();
   static String get tripDetailsSaveForLater => 'tripDetails.saveForLater'.tr();
+  static String get tripDetailsNoReviews => 'tripDetails.noReviews'.tr();
+  static String get tripDetailsNoGallery => 'tripDetails.noGallery'.tr();
+  static String get tripDetailsCancelPolicy => 'tripDetails.cancelPolicy'.tr();
 
   // Booking Confirmation
   static String get bookingConfirmationTitle =>
@@ -189,6 +193,10 @@ class AppStrings {
   // Favorites Tab
   static String get favoritesTitle => 'favorites.title'.tr();
   static String get favoritesEmpty => 'favorites.empty'.tr();
+  static String get favoritesEmptySubtitle => 'favorites.emptySubtitle'.tr();
+  static String favoritesCount(int count) =>
+      'favorites.count'.tr(args: ['$count']);
+  static String get favoritesRetry => 'favorites.retry'.tr();
 
   // Profile Tab
   static String get profileTitle => 'profile.title'.tr();

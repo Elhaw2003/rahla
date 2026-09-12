@@ -12,6 +12,7 @@ import 'package:travel_app/core/shared/widgets/app_network_image.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
 import 'package:travel_app/features/admin/trips/data/models/admin_trips_model.dart';
+import 'package:travel_app/features/user/favorites/presentation/widgets/trip_favorite_button.dart';
 
 class HomePopularDestinationsWidget extends StatefulWidget {
   final List<AdminTripModel> trips;
@@ -115,6 +116,7 @@ class _HomePopularDestinationsWidgetState
 
                     final trip = widget.trips[index];
                     return DestinationCard(
+                      trip: trip,
                       imageUrl: _imageUrl(trip.coverImage),
                       title: trip.destination?.isNotEmpty == true
                           ? trip.destination!
@@ -130,12 +132,14 @@ class _HomePopularDestinationsWidgetState
 }
 
 class DestinationCard extends StatelessWidget {
+  final AdminTripModel trip;
   final String imageUrl;
   final String title;
   final String price;
 
   const DestinationCard({
     super.key,
+    required this.trip,
     required this.imageUrl,
     required this.title,
     required this.price,
@@ -144,7 +148,7 @@ class DestinationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.push(RouteNames.tripDetails),
+      onTap: () => context.push(RouteNames.tripDetails, extra: trip),
       child: Container(
         width: 120.w,
         decoration: BoxDecoration(
@@ -194,17 +198,22 @@ class DestinationCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '$price ${AppStrings.currencyEGP}',
-                      style: AppTextStyles.labelMedium.copyWith(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Text(
+                        '$price ${AppStrings.currencyEGP}',
+                        style: AppTextStyles.labelMedium.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Icon(
-                      Icons.favorite_border,
-                      size: 14.sp,
-                      color: AppColors.textHint,
+                    TripFavoriteButton(
+                      trip: trip,
+                      iconSize: 14,
+                      showBackground: false,
+                      inactiveColor: AppColors.textHint,
                     ),
                   ],
                 ),
