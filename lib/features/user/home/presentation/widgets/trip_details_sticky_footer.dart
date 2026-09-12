@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -8,26 +9,38 @@ import 'package:travel_app/core/router/route_names.dart';
 import 'package:travel_app/core/shared/widgets/app_button.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
+import 'package:travel_app/features/admin/trips/data/models/admin_trips_model.dart';
 
 class TripDetailsStickyFooter extends StatelessWidget {
-  const TripDetailsStickyFooter({super.key});
+  final AdminTripModel trip;
+
+  const TripDetailsStickyFooter({
+    super.key,
+    required this.trip,
+  });
+
+  String _formatPrice(num price) {
+    return NumberFormat('#,###').format(price);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(AppSizes.p16),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.p24,
+        vertical: AppSizes.p16,
+      ),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            color: AppColors.primaryDark.withValues(alpha: 0.08),
             blurRadius: 16,
-            offset: const Offset(0, -4),
+            offset: const Offset(0, -8),
           ),
         ],
       ),
       child: SafeArea(
-        top: false,
         child: Row(
           children: [
             Column(
@@ -42,7 +55,7 @@ class TripDetailsStickyFooter extends StatelessWidget {
                 ),
                 RichText(
                   text: TextSpan(
-                    text: '2,950 ',
+                    text: '${_formatPrice(trip.price)} ',
                     style: AppTextStyles.headlineSmall.copyWith(
                       color: AppColors.primary,
                       fontWeight: FontWeight.bold,

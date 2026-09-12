@@ -53,6 +53,8 @@ dependencies:
   firebase_auth: ^6.5.7
   firebase_core: ^4.13.0
   shimmer: ^4.0.0
+  carousel_slider: ^5.1.2
+  smooth_page_indicator: ^3.0.0
 
 dev_dependencies:
   flutter_test:

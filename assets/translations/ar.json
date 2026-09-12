@@ -103,8 +103,12 @@
     "perPerson": "للفرد الواحد",
     "availableSeats": "مقعد متاح",
     "days": "أيام",
+    "capacity": "السعة",
     "transport Included": "شامل المواصلات",
-    "saveForLater": "احفظ لوقت لاحق"
+    "saveForLater": "احفظ لوقت لاحق",
+    "noReviews": "لا توجد تقييمات بعد",
+    "noGallery": "لا توجد صور في المعرض",
+    "cancelPolicy": "سياسة الإلغاء"
   },
   "bookingConfirmation": {
     "title": "تأكيد الحجز",
@@ -154,7 +158,10 @@
   },
   "favorites": {
     "title": "المفضلة",
-    "empty": "لا توجد رحلات مفضلة حالياً"
+    "empty": "لا توجد رحلات مفضلة حالياً",
+    "emptySubtitle": "احفظ الرحلات اللي بتحبها وهتلاقيها هنا في أي وقت",
+    "count": "{} رحلة محفوظة",
+    "retry": "إعادة المحاولة"
   },
   "profile": {
     "title": "حسابي",

@@ -23,8 +23,10 @@ import 'package:travel_app/features/admin/trips/presentation/pages/admin_trips_p
 import 'package:travel_app/features/admin/bookings/presentation/cubit/admin_booking_cubit.dart';
 import 'package:travel_app/features/admin/bookings/presentation/pages/admin_bookings_page.dart';
 import 'package:travel_app/features/admin/bookings/presentation/pages/admin_booking_details_page.dart';
+import 'package:travel_app/features/admin/trips/data/models/admin_trips_model.dart';
 import 'package:travel_app/features/user/explore/presentation/cubit/explore_cubit.dart';
 import 'package:travel_app/features/user/explore/presentation/pages/explore_page.dart';
+import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_cubit.dart';
 import 'route_names.dart';
 
 class AppRouter {
@@ -58,6 +60,7 @@ class AppRouter {
           providers: [
             BlocProvider(create: (_) => getIt<HomeCubit>()),
             BlocProvider(create: (_) => getIt<CategoriesCubit>()),
+            BlocProvider.value(value: getIt<FavoritesCubit>()),
           ],
           child: const HomePage(),
         ),
@@ -73,6 +76,7 @@ class AppRouter {
               BlocProvider(
                 create: (_) => getIt<CategoriesCubit>()..getCategories(),
               ),
+              BlocProvider.value(value: getIt<FavoritesCubit>()),
             ],
             child: ExplorePage(initialCategorySlug: categorySlug),
           );
@@ -81,7 +85,16 @@ class AppRouter {
       GoRoute(
         path: RouteNames.tripDetails,
         name: RouteNames.tripDetails,
-        builder: (context, state) => const TripDetailsPage(),
+        builder: (context, state) {
+          final trip = state.extra;
+          if (trip is! AdminTripModel) {
+            return const NotFoundPage();
+          }
+          return BlocProvider.value(
+            value: getIt<FavoritesCubit>(),
+            child: TripDetailsPage(trip: trip),
+          );
+        },
       ),
       GoRoute(
         path: RouteNames.bookingConfirmation,

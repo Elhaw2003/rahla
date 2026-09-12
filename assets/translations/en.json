@@ -103,8 +103,12 @@
     "perPerson": "Per Person",
     "availableSeats": "Available Seats",
     "days": "Days",
+    "capacity": "Capacity",
     "transport Included": "Transport Included",
-    "saveForLater": "Save for later"
+    "saveForLater": "Save for later",
+    "noReviews": "No reviews yet",
+    "noGallery": "No gallery images",
+    "cancelPolicy": "Cancellation policy"
   },
   "bookingConfirmation": {
     "title": "Booking Confirmation",
@@ -154,7 +158,10 @@
   },
   "favorites": {
     "title": "Favorites",
-    "empty": "No favorite trips yet"
+    "empty": "No favorite trips yet",
+    "emptySubtitle": "Save trips you love and find them here anytime",
+    "count": "{} saved trips",
+    "retry": "Try again"
   },
   "profile": {
     "title": "My Account",

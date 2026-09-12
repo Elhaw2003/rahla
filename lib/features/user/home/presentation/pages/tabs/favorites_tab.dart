@@ -1,164 +1,114 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:travel_app/core/constants/app_assets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
-import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
+import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_cubit.dart';
+import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_states.dart';
+import 'package:travel_app/features/user/favorites/presentation/widgets/favorites_empty_view.dart';
+import 'package:travel_app/features/user/favorites/presentation/widgets/favorites_error_view.dart';
+import 'package:travel_app/features/user/favorites/presentation/widgets/favorites_header.dart';
+import 'package:travel_app/features/user/favorites/presentation/widgets/favorites_list.dart';
+import 'package:travel_app/features/user/favorites/presentation/widgets/favorites_shimmer_loading.dart';
 
-class FavoritesTab extends StatelessWidget {
+class FavoritesTab extends StatefulWidget {
   const FavoritesTab({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Mock data for favorites
-    final List<Map<String, dynamic>> favorites = [
-      {
-        'title': 'شرم الشيخ - دهب',
-        'price': '3,500 ج.م',
-        'duration': '4 أيام / 3 ليالي',
-        'image': AppAssets.homeFeatured,
-      },
-      {
-        'title': 'رحلة الغردقة السياحية',
-        'price': '4,200 ج.م',
-        'duration': '5 أيام / 4 ليالي',
-        'image': AppAssets.destHurghada,
-      },
-    ];
+  State<FavoritesTab> createState() => _FavoritesTabState();
+}
 
+class _FavoritesTabState extends State<FavoritesTab> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<FavoritesCubit>().getFavorites();
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      context.read<FavoritesCubit>().loadMoreFavorites();
+    }
+  }
+
+  Future<void> _onRefresh() async {
+    await context.read<FavoritesCubit>().getFavorites();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.background,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: true,
         title: Text(
           AppStrings.favoritesTitle,
           style: AppTextStyles.titleLarge.copyWith(
             color: AppColors.textPrimary,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),
-      body: favorites.isEmpty
-          ? Center(
-              child: Text(
-                AppStrings.favoritesEmpty,
-                style: AppTextStyles.titleMedium.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            )
-          : ListView.separated(
-              padding: EdgeInsets.all(AppSizes.p24),
-              itemCount: favorites.length,
-              separatorBuilder: (context, index) =>
-                  SizedBox(height: AppSizes.p16),
-              itemBuilder: (context, index) {
-                final fav = favorites[index];
-                return _buildFavoriteCard(fav);
-              },
-            ),
-    );
-  }
+      body: BlocBuilder<FavoritesCubit, FavoritesStates>(
+        builder: (context, state) {
+          if (state is FavoritesLoading || state is FavoritesInitial) {
+            return const FavoritesShimmerLoading();
+          }
 
-  Widget _buildFavoriteCard(Map<String, dynamic> fav) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSizes.r16),
-        border: Border.all(color: AppColors.border),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(AppSizes.r16),
-                ),
-                child: Image.asset(
-                  fav['image'],
-                  height: 160.h,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned(
-                top: AppSizes.p12,
-                left: AppSizes.p12,
-                child: Container(
-                  padding: EdgeInsets.all(AppSizes.p8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
+          if (state is FavoritesError) {
+            return FavoritesErrorView(
+              message: state.message,
+              onRetry: () => context.read<FavoritesCubit>().getFavorites(),
+            );
+          }
+
+          if (state is FavoritesLoaded) {
+            return RefreshIndicator(
+              onRefresh: _onRefresh,
+              color: AppColors.secondary,
+              child: Column(
+                children: [
+                  FavoritesHeader(totalItems: state.totalItems),
+                  Expanded(
+                    child: state.favorites.isEmpty
+                        ? ListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            children: const [
+                              SizedBox(height: 80),
+                              FavoritesEmptyView(),
+                            ],
+                          )
+                        : FavoritesList(
+                            favorites: state.favorites,
+                            isLoadingMore: state.isLoadingMore,
+                            scrollController: _scrollController,
+                          ),
                   ),
-                  child: Icon(
-                    Icons.favorite,
-                    color: Colors.red, // Solid red for favorite
-                    size: 20.sp,
-                  ),
-                ),
+                ],
               ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.all(AppSizes.p16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        fav['title'],
-                        style: AppTextStyles.titleMedium.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Text(
-                      fav['price'],
-                      style: AppTextStyles.titleMedium.copyWith(
-                        color: AppColors.primaryDark,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: AppSizes.p8),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.access_time,
-                      size: 16.sp,
-                      color: AppColors.textSecondary,
-                    ),
-                    SizedBox(width: AppSizes.p4),
-                    Text(
-                      fav['duration'],
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
       ),
     );
   }

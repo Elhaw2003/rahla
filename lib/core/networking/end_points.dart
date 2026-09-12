@@ -18,4 +18,6 @@ class EndPoints {
       "$adminBookings/$bookingId/reject";
   static const String getTrips = "trips";
   static const String getActiveOffer = "offers";
+  static const String getFavorites = "favorites";
+  static String toggleFavorite(String tripId) => "$getFavorites/toggle/$tripId";
 }

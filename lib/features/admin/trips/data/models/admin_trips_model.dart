@@ -135,11 +135,7 @@ class AdminTripModel {
       availableSeats: json['availableSeats'] as int? ?? 0,
       startDate: json['startDate'] as String?,
       endDate: json['endDate'] as String?,
-      category: json['category'] == null
-          ? null
-          : AdminTripCategory.fromJson(
-              Map<String, dynamic>.from(json['category'] as Map),
-            ),
+      category: _parseCategory(json['category']),
       status: json['status'] as String?,
       createdBySystem: json['createdBySystem'] as bool? ?? false,
       isProtected: json['isProtected'] as bool? ?? false,
@@ -172,6 +168,79 @@ class AdminTripModel {
       isBooked: json['isBooked'] as bool? ?? false,
       bookingStatus: json['bookingStatus'] as String?,
     );
+  }
+
+  AdminTripModel copyWith({
+    String? id,
+    String? title,
+    String? description,
+    String? origin,
+    String? destination,
+    num? price,
+    int? capacity,
+    int? availableSeats,
+    String? startDate,
+    String? endDate,
+    AdminTripCategory? category,
+    String? status,
+    bool? createdBySystem,
+    bool? isProtected,
+    String? coverImage,
+    List<String>? gallery,
+    List<String>? included,
+    List<String>? excluded,
+    String? cancelPolicy,
+    num? averageRating,
+    int? reviewsCount,
+    List<AdminTripDay>? days,
+    String? createdAt,
+    String? updatedAt,
+    int? v,
+    bool? isFavorite,
+    bool? isBooked,
+    String? bookingStatus,
+  }) {
+    return AdminTripModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      origin: origin ?? this.origin,
+      destination: destination ?? this.destination,
+      price: price ?? this.price,
+      capacity: capacity ?? this.capacity,
+      availableSeats: availableSeats ?? this.availableSeats,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      category: category ?? this.category,
+      status: status ?? this.status,
+      createdBySystem: createdBySystem ?? this.createdBySystem,
+      isProtected: isProtected ?? this.isProtected,
+      coverImage: coverImage ?? this.coverImage,
+      gallery: gallery ?? this.gallery,
+      included: included ?? this.included,
+      excluded: excluded ?? this.excluded,
+      cancelPolicy: cancelPolicy ?? this.cancelPolicy,
+      averageRating: averageRating ?? this.averageRating,
+      reviewsCount: reviewsCount ?? this.reviewsCount,
+      days: days ?? this.days,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      v: v ?? this.v,
+      isFavorite: isFavorite ?? this.isFavorite,
+      isBooked: isBooked ?? this.isBooked,
+      bookingStatus: bookingStatus ?? this.bookingStatus,
+    );
+  }
+
+  static AdminTripCategory? _parseCategory(dynamic value) {
+    if (value == null) return null;
+    if (value is Map) {
+      return AdminTripCategory.fromJson(Map<String, dynamic>.from(value));
+    }
+    if (value is String && value.isNotEmpty) {
+      return AdminTripCategory(id: value);
+    }
+    return null;
   }
 }
 
