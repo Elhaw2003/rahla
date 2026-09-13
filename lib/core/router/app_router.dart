@@ -26,6 +26,8 @@ import 'package:travel_app/features/user/explore/presentation/cubit/explore_cubi
 import 'package:travel_app/features/user/explore/presentation/pages/explore_page.dart';
 import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:travel_app/features/user/favorites/presentation/pages/favorites_page.dart';
+import 'package:travel_app/features/user/notifications/presentation/cubit/notifications_cubit.dart';
+import 'package:travel_app/features/user/notifications/presentation/pages/notifications_page.dart';
 import 'package:travel_app/features/user/user_booking/presentation/cubit/user_booking_cubit.dart';
 import 'package:travel_app/features/user/user_booking/presentation/pages/booking_details_page.dart';
 import 'package:travel_app/features/user/user_booking/presentation/pages/create_booking_page.dart';
@@ -103,6 +105,13 @@ class AppRouter {
         builder: (context, state) => BlocProvider.value(
           value: getIt<FavoritesCubit>(),
           child: const FavoritesPage(),
+        ),
+      ),
+      GoRoute(
+        path: RouteNames.notifications,
+        builder: (context, state) => BlocProvider.value(
+          value: getIt<NotificationsCubit>(),
+          child: const NotificationsPage(),
         ),
       ),
       GoRoute(

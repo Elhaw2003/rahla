@@ -8,6 +8,7 @@ import 'package:travel_app/core/networking/dio_consumer.dart';
 import 'package:travel_app/core/networking/dio_factory.dart';
 import 'package:travel_app/core/networking/internet_checker/network_info.dart';
 import 'package:travel_app/core/networking/internet_checker/network_info_impl.dart';
+import 'package:travel_app/core/services/local_notification_service.dart';
 import 'package:travel_app/features/admin/dashboard/data/repo/admin_dashboard_repo.dart';
 import 'package:travel_app/features/admin/dashboard/presentation/cubit/admin_dashboard_cubit.dart';
 import 'package:travel_app/features/admin/trips/data/repo/admin_trip_manager_repo.dart';
@@ -19,6 +20,7 @@ import 'package:travel_app/features/admin/trips/presentation/cubit/categories_cu
 import 'package:travel_app/features/admin/bookings/data/repo/admin_booking_repo.dart';
 import 'package:travel_app/features/admin/bookings/presentation/cubit/admin_booking_cubit.dart';
 import 'package:travel_app/core/services/google_service.dart';
+import 'package:travel_app/core/services/notification_service.dart';
 import 'package:travel_app/features/user/auth/data/repo/auth_repo.dart';
 import 'package:travel_app/features/user/auth/presentation/cubit/auth_cubit.dart';
 import 'package:travel_app/features/user/explore/data/repo/explore_repo.dart';
@@ -30,6 +32,9 @@ import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_
 import 'package:travel_app/features/user/home/data/repo/home_repo.dart';
 import 'package:travel_app/features/user/home/data/repo/home_repo_implementation.dart';
 import 'package:travel_app/features/user/home/presentation/cubit/home_cubit.dart';
+import 'package:travel_app/features/user/notifications/data/repo/notifications_repo.dart';
+import 'package:travel_app/features/user/notifications/data/repo/notifications_repo_implementation.dart';
+import 'package:travel_app/features/user/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:travel_app/features/user/user_booking/data/repo/user_booking_repo.dart';
 import 'package:travel_app/features/user/user_booking/data/repo/user_booking_repo_implementation.dart';
 import 'package:travel_app/features/user/user_booking/presentation/cubit/user_booking_cubit.dart';
@@ -65,6 +70,15 @@ Future<void> setupGetIt() async {
     () => AuthRepoImpl(
       apiConsumer: getIt<ApiConsumer>(),
       secureStorage: getIt<SecureStorageCaching>(),
+    ),
+  );
+  getIt.registerLazySingleton<LocalNotificationService>(
+    () => LocalNotificationService(),
+  );
+  getIt.registerLazySingleton<NotificationService>(
+    () => NotificationService(
+      secureStorage: getIt<SecureStorageCaching>(),
+      localNotificationService: getIt<LocalNotificationService>(),
     ),
   );
   getIt.registerFactory<AuthCubit>(
@@ -146,5 +160,13 @@ Future<void> setupGetIt() async {
   );
   getIt.registerLazySingleton<UserBookingCubit>(
     () => UserBookingCubit(userBookingRepo: getIt<UserBookingRepo>()),
+  );
+
+  // Features - User Notifications
+  getIt.registerLazySingleton<NotificationsRepo>(
+    () => NotificationsRepoImplementation(apiConsumer: getIt<ApiConsumer>()),
+  );
+  getIt.registerLazySingleton<NotificationsCubit>(
+    () => NotificationsCubit(notificationsRepo: getIt<NotificationsRepo>()),
   );
 }

@@ -33,7 +33,7 @@ class ProfileTab extends StatelessWidget {
             Icons.notifications_outlined,
             color: AppColors.textPrimary,
           ),
-          onPressed: () {},
+          onPressed: () => context.push(RouteNames.notifications),
         ),
         actions: [
           IconButton(
@@ -118,6 +118,12 @@ class ProfileTab extends StatelessWidget {
           title: AppStrings.favoritesTitle,
           icon: Icons.favorite_outline,
           onTap: () => context.push(RouteNames.favorites),
+        ),
+        AppSizes.p12.verticalSpace,
+        ProfileMenuItemWidget(
+          title: AppStrings.notificationsTitle,
+          icon: Icons.notifications_outlined,
+          onTap: () => context.push(RouteNames.notifications),
         ),
         AppSizes.p12.verticalSpace,
         ProfileMenuItemWidget(
