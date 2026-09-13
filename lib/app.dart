@@ -16,7 +16,7 @@ class App extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp.router(
-          title: 'Flutter Starter',
+          title: 'Rahala',
           debugShowCheckedModeBanner: false,
 
           // Localization
