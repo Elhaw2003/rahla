@@ -48,7 +48,9 @@ class NotificationService {
     }
 
     FirebaseMessaging.instance.onTokenRefresh.listen(sendTokenToBackend);
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+
+    // Handle Foreground Notifications
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       final title =
           message.notification?.title ??
           message.data['title']?.toString() ??
@@ -56,7 +58,7 @@ class NotificationService {
       final body =
           message.notification?.body ?? message.data['body']?.toString() ?? '';
 
-      localNotificationService.showNotification(
+      await localNotificationService.showNotification(
         title: title,
         body: body,
         id: message.messageId,

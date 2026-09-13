@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:travel_app/core/networking/end_points.dart';
 
 class LoginResponseModel extends Equatable {
   final int statusCode;
@@ -125,6 +126,16 @@ class UserResponseModel extends Equatable {
     };
   }
 
+  /// Resolves relative upload paths to a full media URL.
+  String get fullProfileImageUrl {
+    final path = profileImage;
+    if (path == null || path.isEmpty) return '';
+    if (path.startsWith('http')) return path;
+    final baseOrigin = EndPoints.baseUrl.replaceAll('/api/v1/', '').replaceAll('/api/v1', '');
+    final cleanPath = path.startsWith('/') ? path.substring(1) : path;
+    return '$baseOrigin/$cleanPath';
+  }
+
   @override
   List<Object?> get props => [
     id,
@@ -140,4 +151,38 @@ class UserResponseModel extends Equatable {
     fcmTokens,
     isProtected,
   ];
+}
+
+/// GET `/auth/me` response wrapper.
+class UserProfileResponseModel extends Equatable {
+  final int statusCode;
+  final bool success;
+  final String code;
+  final String message;
+  final UserResponseModel? data;
+
+  const UserProfileResponseModel({
+    required this.statusCode,
+    required this.success,
+    required this.code,
+    required this.message,
+    this.data,
+  });
+
+  factory UserProfileResponseModel.fromJson(Map<String, dynamic> json) {
+    return UserProfileResponseModel(
+      statusCode: json['statusCode'] as int? ?? 0,
+      success: json['success'] as bool? ?? false,
+      code: json['code'] as String? ?? '',
+      message: json['message'] as String? ?? '',
+      data: json['data'] == null
+          ? null
+          : UserResponseModel.fromJson(
+              Map<String, dynamic>.from(json['data'] as Map),
+            ),
+    );
+  }
+
+  @override
+  List<Object?> get props => [statusCode, success, code, message, data];
 }

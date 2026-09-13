@@ -9,7 +9,6 @@ import 'package:travel_app/features/user/auth/presentation/pages/register_page.d
 import 'package:travel_app/features/user/home/presentation/cubit/home_cubit.dart';
 import 'package:travel_app/features/user/home/presentation/pages/home_page.dart';
 import 'package:travel_app/features/user/home/presentation/pages/trip_details_page.dart';
-import 'package:travel_app/features/user/profile/presentation/pages/profile_page.dart';
 import 'package:travel_app/features/user/settings/presentation/pages/settings_page.dart';
 import 'package:travel_app/features/admin/dashboard/presentation/cubit/admin_dashboard_cubit.dart';
 import 'package:travel_app/features/admin/dashboard/presentation/pages/admin_dashboard_page.dart';
@@ -28,6 +27,7 @@ import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_
 import 'package:travel_app/features/user/favorites/presentation/pages/favorites_page.dart';
 import 'package:travel_app/features/user/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:travel_app/features/user/notifications/presentation/pages/notifications_page.dart';
+import 'package:travel_app/features/user/profile/presentation/cubit/profile_cubit.dart';
 import 'package:travel_app/features/user/user_booking/presentation/cubit/user_booking_cubit.dart';
 import 'package:travel_app/features/user/user_booking/presentation/pages/booking_details_page.dart';
 import 'package:travel_app/features/user/user_booking/presentation/pages/create_booking_page.dart';
@@ -66,6 +66,7 @@ class AppRouter {
             BlocProvider(create: (_) => getIt<CategoriesCubit>()),
             BlocProvider.value(value: getIt<FavoritesCubit>()),
             BlocProvider.value(value: getIt<UserBookingCubit>()),
+            BlocProvider(create: (_) => getIt<ProfileCubit>()),
           ],
           child: const HomePage(),
         ),
@@ -141,10 +142,6 @@ class AppRouter {
             child: UserBookingDetailsPage(bookingId: bookingId),
           );
         },
-      ),
-      GoRoute(
-        path: RouteNames.profile,
-        builder: (context, state) => const ProfilePage(),
       ),
       GoRoute(
         path: RouteNames.settings,

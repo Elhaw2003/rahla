@@ -35,6 +35,7 @@ import 'package:travel_app/features/user/home/presentation/cubit/home_cubit.dart
 import 'package:travel_app/features/user/notifications/data/repo/notifications_repo.dart';
 import 'package:travel_app/features/user/notifications/data/repo/notifications_repo_implementation.dart';
 import 'package:travel_app/features/user/notifications/presentation/cubit/notifications_cubit.dart';
+import 'package:travel_app/features/user/profile/presentation/cubit/profile_cubit.dart';
 import 'package:travel_app/features/user/user_booking/data/repo/user_booking_repo.dart';
 import 'package:travel_app/features/user/user_booking/data/repo/user_booking_repo_implementation.dart';
 import 'package:travel_app/features/user/user_booking/presentation/cubit/user_booking_cubit.dart';
@@ -168,5 +169,10 @@ Future<void> setupGetIt() async {
   );
   getIt.registerLazySingleton<NotificationsCubit>(
     () => NotificationsCubit(notificationsRepo: getIt<NotificationsRepo>()),
+  );
+
+  // Features - User Profile
+  getIt.registerFactory<ProfileCubit>(
+    () => ProfileCubit(authRepo: getIt<AuthRepo>()),
   );
 }
