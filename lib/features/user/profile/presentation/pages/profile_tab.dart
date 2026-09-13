@@ -1,18 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
-import 'package:travel_app/core/constants/app_assets.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
 import 'package:travel_app/core/router/route_names.dart';
-import 'package:travel_app/core/shared/widgets/app_button.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
-import 'package:travel_app/features/user/profile/presentation/widgets/profile_menu_item_widget.dart';
+import 'package:travel_app/features/user/profile/presentation/cubit/profile_cubit.dart';
+import 'package:travel_app/features/user/profile/presentation/cubit/profile_states.dart';
+import 'package:travel_app/features/user/profile/presentation/widgets/profile_error_view.dart';
+import 'package:travel_app/features/user/profile/presentation/widgets/profile_header.dart';
+import 'package:travel_app/features/user/profile/presentation/widgets/profile_loading_view.dart';
+import 'package:travel_app/features/user/profile/presentation/widgets/profile_logout_button.dart';
+import 'package:travel_app/features/user/profile/presentation/widgets/profile_menu_list.dart';
 
-class ProfileTab extends StatelessWidget {
+class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
+
+  @override
+  State<ProfileTab> createState() => _ProfileTabState();
+}
+
+class _ProfileTabState extends State<ProfileTab> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<ProfileCubit>().getUserProfile();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,122 +60,37 @@ class ProfileTab extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(AppSizes.p24),
-        child: Column(
-          children: [
-            _buildHeader(),
-            AppSizes.p32.verticalSpace,
-            _buildOptionsList(context),
-            AppSizes.p32.verticalSpace,
-            _buildLogoutButton(),
-            AppSizes.p32.verticalSpace,
-          ],
-        ),
-      ),
-    );
-  }
+      body: BlocBuilder<ProfileCubit, ProfileStates>(
+        builder: (context, state) {
+          if (state is ProfileLoading || state is ProfileInitial) {
+            return const ProfileLoadingView();
+          }
 
-  Widget _buildHeader() {
-    return Column(
-      children: [
-        Stack(
-          alignment: Alignment.bottomRight,
-          children: [
-            CircleAvatar(
-              radius: 50.r,
-              backgroundColor: AppColors.border,
-              backgroundImage: AssetImage(AppAssets.placeholder),
-            ),
-            Container(
-              padding: EdgeInsets.all(AppSizes.p4),
-              decoration: BoxDecoration(
-                color: const Color(0xFF91590F),
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 2),
+          if (state is ProfileFailure) {
+            return ProfileErrorView(
+              message: state.message,
+              onRetry: () => context.read<ProfileCubit>().getUserProfile(),
+            );
+          }
+
+          if (state is ProfileSuccess) {
+            return SingleChildScrollView(
+              padding: EdgeInsets.all(AppSizes.p24),
+              child: Column(
+                children: [
+                  ProfileHeader(user: state.user),
+                  AppSizes.p32.verticalSpace,
+                  const ProfileMenuList(),
+                  AppSizes.p32.verticalSpace,
+                  const ProfileLogoutButton(),
+                  AppSizes.p32.verticalSpace,
+                ],
               ),
-              child: Icon(Icons.camera_alt, color: Colors.white, size: 16.sp),
-            ),
-          ],
-        ),
-        AppSizes.p16.verticalSpace,
-        Text(
-          'أحمد محمد',
-          style: AppTextStyles.headlineSmall.copyWith(
-            color: AppColors.primaryDark,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        AppSizes.p4.verticalSpace,
-        Text(
-          'ahmed.m@example.com',
-          style: AppTextStyles.bodyMedium.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-        AppSizes.p4.verticalSpace,
-        Text(
-          '+20 100 123 4567',
-          style: AppTextStyles.bodyMedium.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-      ],
-    );
-  }
+            );
+          }
 
-  Widget _buildOptionsList(BuildContext context) {
-    return Column(
-      children: [
-        ProfileMenuItemWidget(
-          title: AppStrings.profilePersonalData,
-          icon: Icons.person_outline,
-        ),
-        AppSizes.p12.verticalSpace,
-        ProfileMenuItemWidget(
-          title: AppStrings.favoritesTitle,
-          icon: Icons.favorite_outline,
-          onTap: () => context.push(RouteNames.favorites),
-        ),
-        AppSizes.p12.verticalSpace,
-        ProfileMenuItemWidget(
-          title: AppStrings.notificationsTitle,
-          icon: Icons.notifications_outlined,
-          onTap: () => context.push(RouteNames.notifications),
-        ),
-        AppSizes.p12.verticalSpace,
-        ProfileMenuItemWidget(
-          title: AppStrings.profileEditAccount,
-          icon: Icons.edit_outlined,
-        ),
-        AppSizes.p12.verticalSpace,
-        ProfileMenuItemWidget(
-          title: AppStrings.profileChangePassword,
-          icon: Icons.lock_outline,
-        ),
-        AppSizes.p12.verticalSpace,
-        ProfileMenuItemWidget(
-          title: AppStrings.profileHelpSupport,
-          icon: Icons.help_outline,
-        ),
-        AppSizes.p12.verticalSpace,
-        ProfileMenuItemWidget(
-          title: AppStrings.profileAboutApp,
-          icon: Icons.info_outline,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLogoutButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: AppButton.outlined(
-        text: AppStrings.profileLogout,
-        foregroundColor: Colors.red,
-        borderColor: Colors.red.withValues(alpha: 0.3),
-        icon: Icon(Icons.logout, color: Colors.red, size: 20.sp),
-        onPressed: () {},
+          return const SizedBox.shrink();
+        },
       ),
     );
   }

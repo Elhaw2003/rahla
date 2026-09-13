@@ -23,6 +23,7 @@ abstract class AuthRepo {
     required String idToken,
   });
   Future<Either<Failure, void>> registerFcmToken({required String fcmToken});
+  Future<Either<Failure, UserResponseModel>> getUserProfile();
 }
 
 class AuthRepoImpl implements AuthRepo {
@@ -163,6 +164,25 @@ class AuthRepoImpl implements AuthRepo {
         data: {'fcmToken': fcmToken},
       );
       return const Right(null);
+    } on AppException catch (e) {
+      return Left(mapExceptionToFailure(e));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserResponseModel>> getUserProfile() async {
+    try {
+      final response = await _apiConsumer.get(EndPoints.getUserProfile);
+      final json = Map<String, dynamic>.from(response as Map);
+      final profileResponse = UserProfileResponseModel.fromJson(json);
+      final user = profileResponse.data;
+      if (user == null) {
+        return const Left(UnexpectedFailure('User profile data is missing'));
+      }
+      await _secureStorage.saveUser(user.toJson());
+      return Right(user);
     } on AppException catch (e) {
       return Left(mapExceptionToFailure(e));
     } catch (e) {

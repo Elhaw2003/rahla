@@ -4,7 +4,7 @@ class AppAssets {
   static const String iconsPath = 'assets/icons/';
   // Images
   static const String logo = '${imagesPath}logo.png';
-  static const String placeholder = '${imagesPath}placeholder.png';
+  static const String placeholder = '${imagesPath}logo.png';
   static const String splashBackground = '${imagesPath}splash_bg.png';
   static const String googleLogo = '${imagesPath}google_logo.png';
   static const String facebookLogo = '${imagesPath}facebook_logo.png';
