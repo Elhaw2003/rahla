@@ -11,7 +11,6 @@ import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_
 import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_states.dart';
 import 'package:travel_app/features/user/profile/presentation/pages/profile_tab.dart';
 import 'tabs/home_tab.dart';
-import 'tabs/notifications_tab.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,7 +24,6 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _pages = const [
     HomeTab(),
-    NotificationsTab(),
     BookingsTab(),
     ProfileTab(),
   ];
@@ -65,11 +63,6 @@ class _HomePageState extends State<HomePage> {
               icon: const Icon(Icons.home_outlined),
               activeIcon: const Icon(Icons.home),
               label: AppStrings.navHome,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.notifications_outlined),
-              activeIcon: const Icon(Icons.notifications),
-              label: AppStrings.navNotifications,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.bookmark_outline),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
 import 'package:travel_app/core/extensions/widget_extension.dart';
+import 'package:travel_app/core/router/route_names.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
 
@@ -31,16 +33,20 @@ class HomeHeaderWidget extends StatelessWidget {
             ),
           ],
         ),
-        Container(
-          padding: EdgeInsets.all(8.r),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: AppColors.border),
-          ),
-          child: Icon(
-            Icons.notifications_none,
-            color: AppColors.textPrimary,
-            size: 20.sp,
+        InkWell(
+          onTap: () => context.push(RouteNames.notifications),
+          borderRadius: BorderRadius.circular(AppSizes.r32),
+          child: Container(
+            padding: EdgeInsets.all(8.r),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Icon(
+              Icons.notifications_none,
+              color: AppColors.textPrimary,
+              size: 20.sp,
+            ),
           ),
         ),
       ],

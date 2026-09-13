@@ -23,4 +23,10 @@ class EndPoints {
   static const String createUserBooking = "bookings";
   static const String getUserBookings = "bookings/my";
   static String getUserBookingById(String bookingId) => "bookings/$bookingId";
+  static const String notifications = "notifications";
+  static const String getNotifications = notifications;
+  static const String registerFcmToken = "$notifications/fcm-token";
+  static String markNotificationAsRead(String notificationId) =>
+      "$notifications/$notificationId/read";
+  static String markAllNotificationsAsRead() => "$notifications/read-all";
 }

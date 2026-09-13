@@ -6,6 +6,7 @@ import 'package:travel_app/core/errors/failure_mapper.dart';
 import 'package:travel_app/core/helper/cache/secure_storage_caching.dart';
 import 'package:travel_app/core/networking/api_consumer.dart';
 import 'package:travel_app/core/networking/end_points.dart';
+import 'package:travel_app/core/services/notification_service.dart';
 import 'package:travel_app/features/user/auth/data/models/login_response_model.dart';
 import 'package:travel_app/features/user/auth/data/models/register_request_model.dart';
 import 'package:travel_app/features/user/auth/data/models/register_response_model.dart';
@@ -21,6 +22,7 @@ abstract class AuthRepo {
   Future<Either<Failure, LoginResponseModel>> signInWithGoogle({
     required String idToken,
   });
+  Future<Either<Failure, void>> registerFcmToken({required String fcmToken});
 }
 
 class AuthRepoImpl implements AuthRepo {
@@ -63,7 +65,7 @@ class AuthRepoImpl implements AuthRepo {
           await _secureStorage.saveUser(user.toJson());
         }
       }
-
+      await _syncFcmTokenSafely();
       return Right(loginResponse);
     } on AppException catch (e) {
       return Left(mapExceptionToFailure(e));
@@ -107,6 +109,7 @@ class AuthRepoImpl implements AuthRepo {
       if (user != null) {
         await _secureStorage.saveUser(user.toJson());
       }
+      await _syncFcmTokenSafely();
       return Right(registerResponse);
     } on AppException catch (e) {
       return Left(mapExceptionToFailure(e));
@@ -141,11 +144,38 @@ class AuthRepoImpl implements AuthRepo {
           await _secureStorage.saveUser(user.toJson());
         }
       }
+      await _syncFcmTokenSafely();
       return Right(loginResponse);
     } on AppException catch (e) {
       return Left(mapExceptionToFailure(e));
     } catch (e) {
       return Left(UnexpectedFailure(e.toString()));
     }
+  }
+
+  @override
+  Future<Either<Failure, void>> registerFcmToken({
+    required String fcmToken,
+  }) async {
+    try {
+      await _apiConsumer.patch(
+        EndPoints.registerFcmToken,
+        data: {'fcmToken': fcmToken},
+      );
+      return const Right(null);
+    } on AppException catch (e) {
+      return Left(mapExceptionToFailure(e));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
+
+  /// Never fails login/register if FCM is unavailable.
+  Future<void> _syncFcmTokenSafely() async {
+    try {
+      final fcmToken = await NotificationService.getFcmToken();
+      if (fcmToken.isEmpty) return;
+      await registerFcmToken(fcmToken: fcmToken);
+    } catch (_) {}
   }
 }
