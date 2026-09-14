@@ -10,7 +10,8 @@
     "loginFacebook": "Continue with Facebook",
     "bookNow": "Book Now",
     "viewAll": "View All",
-    "loginAdmin": "Login as Admin"
+    "loginAdmin": "Login as Admin",
+    "changePassword": "Change Password"
   },
   "errors": {
     "unknown": "An unknown error occurred",
@@ -33,14 +34,18 @@
     "alreadyHaveAccount": "Already have an account? ",
     "createAccountTitle": "Create a new account",
     "createAccountSubtitle": "Start your journey with us",
-    "profilePhotoOptional": "Profile Photo (Optional)"
+    "profilePhotoOptional": "Profile Photo (Optional)",
+    "changePasswordSubtitle": "Enter your current password, then choose a new one"
   },
   "labels": {
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",
     "phone": "Phone Number",
-    "name": "Full Name"
+    "name": "Full Name",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password"
   },
   "hints": {
     "email": "example@mail.com",
@@ -48,7 +53,10 @@
     "confirmPassword": "Confirm your password",
     "search": "Search for a trip, destination or activity",
     "phone": "Enter phone number",
-    "name": "Enter full name"
+    "name": "Enter full name",
+    "currentPassword": "Enter current password",
+    "newPassword": "Enter new password",
+    "confirmNewPassword": "Re-enter new password"
   },
   "splash": {
     "title": "Egypt Tours",

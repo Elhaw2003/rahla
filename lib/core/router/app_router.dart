@@ -28,6 +28,7 @@ import 'package:travel_app/features/user/favorites/presentation/pages/favorites_
 import 'package:travel_app/features/user/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:travel_app/features/user/notifications/presentation/pages/notifications_page.dart';
 import 'package:travel_app/features/user/profile/presentation/cubit/profile_cubit.dart';
+import 'package:travel_app/features/user/profile/presentation/pages/change_password_page.dart';
 import 'package:travel_app/features/user/profile/presentation/pages/edit_profile_page.dart';
 import 'package:travel_app/features/user/profile/presentation/pages/profile_page.dart';
 import 'package:travel_app/features/user/user_booking/presentation/cubit/user_booking_cubit.dart';
@@ -160,6 +161,13 @@ class AppRouter {
         builder: (context, state) => BlocProvider.value(
           value: getIt<ProfileCubit>(),
           child: const EditProfilePage(),
+        ),
+      ),
+      GoRoute(
+        path: RouteNames.changePassword,
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<AuthCubit>(),
+          child: const ChangePasswordPage(),
         ),
       ),
       GoRoute(

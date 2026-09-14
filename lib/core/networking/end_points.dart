@@ -9,6 +9,7 @@ class EndPoints {
   static const String refreshToken = "${auth}refresh-token";
   static const String getUserProfile = "${auth}me";
   static const String updateProfile = "${auth}profile";
+  static const String changePassword = "${auth}change-password";
   static const String adminStats = "admin/stats";
   static const String adminTrips = "trips/admin/all";
   static const String categories = "categories";
