@@ -8,6 +8,7 @@ import 'package:travel_app/core/networking/api_consumer.dart';
 import 'package:travel_app/core/networking/end_points.dart';
 import 'package:travel_app/core/services/notification_service.dart';
 import 'package:travel_app/features/user/auth/data/models/login_response_model.dart';
+import 'package:travel_app/features/user/auth/data/models/change_password_request_model.dart';
 import 'package:travel_app/features/user/auth/data/models/register_request_model.dart';
 import 'package:travel_app/features/user/auth/data/models/register_response_model.dart';
 import 'package:travel_app/features/user/auth/data/models/update_profile_request_model.dart';
@@ -27,6 +28,9 @@ abstract class AuthRepo {
   Future<Either<Failure, UserResponseModel>> getUserProfile();
   Future<Either<Failure, UserResponseModel>> updateProfile({
     required UpdateProfileRequestModel request,
+  });
+  Future<Either<Failure, String>> changePassword({
+    required ChangePasswordRequestModel request,
   });
 }
 
@@ -230,6 +234,25 @@ class AuthRepoImpl implements AuthRepo {
       }
       await _secureStorage.saveUser(user.toJson());
       return Right(user);
+    } on AppException catch (e) {
+      return Left(mapExceptionToFailure(e));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> changePassword({
+    required ChangePasswordRequestModel request,
+  }) async {
+    try {
+      final response = await _apiConsumer.patch(
+        EndPoints.changePassword,
+        data: request.toJson(),
+      );
+      final json = Map<String, dynamic>.from(response as Map);
+      final message = json['message'] as String? ?? 'تم تغيير كلمة المرور بنجاح';
+      return Right(message);
     } on AppException catch (e) {
       return Left(mapExceptionToFailure(e));
     } catch (e) {

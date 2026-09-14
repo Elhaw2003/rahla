@@ -50,3 +50,11 @@ class GoogleLoginSuccess extends AuthStates {
   @override
   List<Object?> get props => [loginResponse];
 }
+
+class ChangePasswordSuccess extends AuthStates {
+  final String message;
+  const ChangePasswordSuccess({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}

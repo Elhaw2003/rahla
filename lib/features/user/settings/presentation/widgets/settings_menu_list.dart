@@ -34,6 +34,7 @@ class SettingsMenuList extends StatelessWidget {
         ProfileMenuItemWidget(
           title: AppStrings.profileChangePassword,
           icon: Icons.lock_outline,
+          onTap: () => context.push(RouteNames.changePassword),
         ),
         AppSizes.p12.verticalSpace,
         ProfileMenuItemWidget(

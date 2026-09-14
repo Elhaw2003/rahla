@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_app/core/services/google_service.dart';
+import 'package:travel_app/features/user/auth/data/models/change_password_request_model.dart';
 import 'package:travel_app/features/user/auth/data/models/register_request_model.dart';
 import 'package:travel_app/features/user/auth/data/repo/auth_repo.dart';
 import 'package:travel_app/features/user/auth/presentation/cubit/auth_states.dart';
@@ -57,5 +58,16 @@ class AuthCubit extends Cubit<AuthStates> {
     } catch (e) {
       emit(AuthFailure(message: e.toString()));
     }
+  }
+
+  Future<void> changePassword({
+    required ChangePasswordRequestModel request,
+  }) async {
+    emit(const AuthLoading());
+    final result = await _authRepo.changePassword(request: request);
+    result.fold(
+      (failure) => emit(AuthFailure(message: failure.message)),
+      (message) => emit(ChangePasswordSuccess(message: message)),
+    );
   }
 }

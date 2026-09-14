@@ -46,6 +46,9 @@ class AppStrings {
   static String get phoneLabel => 'labels.phone'.tr();
   static String get nameLabel => 'labels.name'.tr();
   static String get confirmPasswordLabel => 'labels.confirmPassword'.tr();
+  static String get currentPasswordLabel => 'labels.currentPassword'.tr();
+  static String get newPasswordLabel => 'labels.newPassword'.tr();
+  static String get confirmNewPasswordLabel => 'labels.confirmNewPassword'.tr();
 
   // Hints
   static String get emailHint => 'hints.email'.tr();
@@ -54,6 +57,11 @@ class AppStrings {
   static String get confirmPasswordHint => 'hints.confirmPassword'.tr();
   static String get phoneHint => 'hints.phone'.tr();
   static String get nameHint => 'hints.name'.tr();
+  static String get currentPasswordHint => 'hints.currentPassword'.tr();
+  static String get newPasswordHint => 'hints.newPassword'.tr();
+  static String get confirmNewPasswordHint => 'hints.confirmNewPassword'.tr();
+  static String get changePasswordSubtitle => 'messages.changePasswordSubtitle'.tr();
+  static String get changePasswordSubmit => 'buttons.changePassword'.tr();
 
   // Splash
   static String get splashTitle => 'splash.title'.tr();
