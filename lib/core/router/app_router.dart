@@ -28,6 +28,8 @@ import 'package:travel_app/features/user/favorites/presentation/pages/favorites_
 import 'package:travel_app/features/user/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:travel_app/features/user/notifications/presentation/pages/notifications_page.dart';
 import 'package:travel_app/features/user/profile/presentation/cubit/profile_cubit.dart';
+import 'package:travel_app/features/user/profile/presentation/pages/edit_profile_page.dart';
+import 'package:travel_app/features/user/profile/presentation/pages/profile_page.dart';
 import 'package:travel_app/features/user/user_booking/presentation/cubit/user_booking_cubit.dart';
 import 'package:travel_app/features/user/user_booking/presentation/pages/booking_details_page.dart';
 import 'package:travel_app/features/user/user_booking/presentation/pages/create_booking_page.dart';
@@ -66,7 +68,6 @@ class AppRouter {
             BlocProvider(create: (_) => getIt<CategoriesCubit>()),
             BlocProvider.value(value: getIt<FavoritesCubit>()),
             BlocProvider.value(value: getIt<UserBookingCubit>()),
-            BlocProvider(create: (_) => getIt<ProfileCubit>()),
           ],
           child: const HomePage(),
         ),
@@ -146,6 +147,20 @@ class AppRouter {
       GoRoute(
         path: RouteNames.settings,
         builder: (context, state) => const SettingsPage(),
+      ),
+      GoRoute(
+        path: RouteNames.profile,
+        builder: (context, state) => BlocProvider.value(
+          value: getIt<ProfileCubit>(),
+          child: const ProfilePage(),
+        ),
+      ),
+      GoRoute(
+        path: RouteNames.editProfile,
+        builder: (context, state) => BlocProvider.value(
+          value: getIt<ProfileCubit>(),
+          child: const EditProfilePage(),
+        ),
       ),
       GoRoute(
         path: RouteNames.adminDashboard,

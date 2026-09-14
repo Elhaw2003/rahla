@@ -33,3 +33,32 @@ class ProfileFailure extends ProfileStates {
   @override
   List<Object?> get props => [message];
 }
+
+class ProfileUpdating extends ProfileStates {
+  final UserResponseModel user;
+
+  const ProfileUpdating({required this.user});
+
+  @override
+  List<Object?> get props => [user];
+}
+
+class ProfileUpdateSuccess extends ProfileStates {
+  final UserResponseModel user;
+  final String message;
+
+  const ProfileUpdateSuccess({required this.user, required this.message});
+
+  @override
+  List<Object?> get props => [user, message];
+}
+
+class ProfileUpdateFailure extends ProfileStates {
+  final UserResponseModel user;
+  final String message;
+
+  const ProfileUpdateFailure({required this.user, required this.message});
+
+  @override
+  List<Object?> get props => [user, message];
+}

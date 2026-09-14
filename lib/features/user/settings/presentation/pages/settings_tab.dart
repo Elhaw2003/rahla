@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
 import 'package:travel_app/features/user/profile/presentation/widgets/profile_logout_button.dart';
 import 'package:travel_app/features/user/settings/presentation/widgets/settings_menu_list.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+class SettingsTab extends StatelessWidget {
+  const SettingsTab({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +18,6 @@ class SettingsPage extends StatelessWidget {
         backgroundColor: AppColors.background,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary),
-          onPressed: () => context.pop(),
-        ),
         title: Text(
           AppStrings.settingsTitle,
           style: AppTextStyles.titleLarge.copyWith(

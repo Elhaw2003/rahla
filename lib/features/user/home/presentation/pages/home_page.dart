@@ -6,11 +6,11 @@ import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
 import 'package:travel_app/core/router/route_names.dart';
 import 'package:travel_app/core/shared/widgets/app_snackbar.dart';
-import 'package:travel_app/features/user/home/presentation/pages/tabs/bookings_tab.dart';
 import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_states.dart';
-import 'package:travel_app/features/user/profile/presentation/pages/profile_tab.dart';
-import 'tabs/home_tab.dart';
+import 'package:travel_app/features/user/home/presentation/pages/tabs/bookings_tab.dart';
+import 'package:travel_app/features/user/home/presentation/pages/tabs/home_tab.dart';
+import 'package:travel_app/features/user/settings/presentation/pages/settings_tab.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = const [
     HomeTab(),
     BookingsTab(),
-    ProfileTab(),
+    SettingsTab(),
   ];
 
   @override
@@ -70,9 +70,9 @@ class _HomePageState extends State<HomePage> {
               label: AppStrings.navBookings,
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.person_outline),
-              activeIcon: const Icon(Icons.person),
-              label: AppStrings.homeNavMore,
+              icon: const Icon(Icons.settings_outlined),
+              activeIcon: const Icon(Icons.settings),
+              label: AppStrings.settingsTitle,
             ),
           ],
         ),
