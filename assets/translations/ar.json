@@ -170,7 +170,18 @@
     "changePassword": "تغيير كلمة المرور",
     "helpSupport": "مساعدة والدعم",
     "aboutApp": "عن التطبيق",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "saveChanges": "حفظ التغييرات",
+    "detailsSection": "تفاصيل الحساب",
+    "roleLabel": "نوع الحساب",
+    "providerLabel": "طريقة التسجيل",
+    "joinedAt": "تاريخ الانضمام",
+    "updatedAt": "آخر تحديث",
+    "accountId": "رقم الحساب",
+    "roleAdmin": "مشرف",
+    "roleUser": "مستخدم",
+    "providerGoogle": "Google",
+    "providerEmail": "البريد الإلكتروني"
   },
   "admin": {
     "dashboardTitle": "لوحة تحكم الأدمن",

@@ -10,6 +10,7 @@ import 'package:travel_app/core/services/notification_service.dart';
 import 'package:travel_app/features/user/auth/data/models/login_response_model.dart';
 import 'package:travel_app/features/user/auth/data/models/register_request_model.dart';
 import 'package:travel_app/features/user/auth/data/models/register_response_model.dart';
+import 'package:travel_app/features/user/auth/data/models/update_profile_request_model.dart';
 
 abstract class AuthRepo {
   Future<Either<Failure, LoginResponseModel>> login({
@@ -24,6 +25,9 @@ abstract class AuthRepo {
   });
   Future<Either<Failure, void>> registerFcmToken({required String fcmToken});
   Future<Either<Failure, UserResponseModel>> getUserProfile();
+  Future<Either<Failure, UserResponseModel>> updateProfile({
+    required UpdateProfileRequestModel request,
+  });
 }
 
 class AuthRepoImpl implements AuthRepo {
@@ -180,6 +184,49 @@ class AuthRepoImpl implements AuthRepo {
       final user = profileResponse.data;
       if (user == null) {
         return const Left(UnexpectedFailure('User profile data is missing'));
+      }
+      await _secureStorage.saveUser(user.toJson());
+      return Right(user);
+    } on AppException catch (e) {
+      return Left(mapExceptionToFailure(e));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserResponseModel>> updateProfile({
+    required UpdateProfileRequestModel request,
+  }) async {
+    try {
+      if (!request.hasChanges) {
+        return const Left(UnexpectedFailure('No changes to update'));
+      }
+
+      final Map<String, dynamic> data = {};
+      if (request.fullName != null) {
+        data['fullName'] = request.fullName;
+      }
+      if (request.phone != null) {
+        data['phone'] = request.phone;
+      }
+      if (request.profileImage != null && request.profileImage!.isNotEmpty) {
+        data['profileImage'] = await MultipartFile.fromFile(
+          request.profileImage!,
+          filename: request.profileImage!.split('/').last,
+        );
+      }
+
+      final response = await _apiConsumer.put(
+        EndPoints.updateProfile,
+        data: FormData.fromMap(data),
+        options: Options(contentType: 'multipart/form-data'),
+      );
+      final json = Map<String, dynamic>.from(response as Map);
+      final profileResponse = UserProfileResponseModel.fromJson(json);
+      final user = profileResponse.data;
+      if (user == null) {
+        return const Left(UnexpectedFailure('Updated profile data is missing'));
       }
       await _secureStorage.saveUser(user.toJson());
       return Right(user);

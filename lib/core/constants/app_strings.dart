@@ -206,6 +206,17 @@ class AppStrings {
   static String get profileHelpSupport => 'profile.helpSupport'.tr();
   static String get profileAboutApp => 'profile.aboutApp'.tr();
   static String get profileLogout => 'profile.logout'.tr();
+  static String get profileSaveChanges => 'profile.saveChanges'.tr();
+  static String get profileDetailsSection => 'profile.detailsSection'.tr();
+  static String get profileRoleLabel => 'profile.roleLabel'.tr();
+  static String get profileProviderLabel => 'profile.providerLabel'.tr();
+  static String get profileJoinedAt => 'profile.joinedAt'.tr();
+  static String get profileUpdatedAt => 'profile.updatedAt'.tr();
+  static String get profileAccountId => 'profile.accountId'.tr();
+  static String get profileRoleAdmin => 'profile.roleAdmin'.tr();
+  static String get profileRoleUser => 'profile.roleUser'.tr();
+  static String get profileProviderGoogle => 'profile.providerGoogle'.tr();
+  static String get profileProviderEmail => 'profile.providerEmail'.tr();
   static String get loginAdmin => 'buttons.loginAdmin'.tr();
 
   // Admin

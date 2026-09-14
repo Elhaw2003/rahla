@@ -172,7 +172,7 @@ Future<void> setupGetIt() async {
   );
 
   // Features - User Profile
-  getIt.registerFactory<ProfileCubit>(
+  getIt.registerLazySingleton<ProfileCubit>(
     () => ProfileCubit(authRepo: getIt<AuthRepo>()),
   );
 }

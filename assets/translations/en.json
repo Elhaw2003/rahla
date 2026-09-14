@@ -170,7 +170,18 @@
     "changePassword": "Change Password",
     "helpSupport": "Help and Support",
     "aboutApp": "About the App",
-    "logout": "Logout"
+    "logout": "Logout",
+    "saveChanges": "Save Changes",
+    "detailsSection": "Account Details",
+    "roleLabel": "Account Type",
+    "providerLabel": "Sign-in Method",
+    "joinedAt": "Joined On",
+    "updatedAt": "Last Updated",
+    "accountId": "Account ID",
+    "roleAdmin": "Admin",
+    "roleUser": "User",
+    "providerGoogle": "Google",
+    "providerEmail": "Email"
   },
   "admin": {
     "dashboardTitle": "Admin Dashboard",

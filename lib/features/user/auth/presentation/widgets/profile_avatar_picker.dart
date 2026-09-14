@@ -6,16 +6,19 @@ import 'package:image_picker/image_picker.dart';
 import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
 import 'package:travel_app/core/extensions/widget_extension.dart';
+import 'package:travel_app/core/shared/widgets/app_network_image.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
 
 class ProfileAvatarPicker extends StatelessWidget {
   final String? imagePath;
+  final String? networkImageUrl;
   final ValueChanged<String?>? onImageChanged;
 
   const ProfileAvatarPicker({
     super.key,
     this.imagePath,
+    this.networkImageUrl,
     this.onImageChanged,
   });
 
@@ -34,7 +37,10 @@ class ProfileAvatarPicker extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
-                  leading: const Icon(Icons.camera_alt, color: AppColors.primary),
+                  leading: const Icon(
+                    Icons.camera_alt,
+                    color: AppColors.primary,
+                  ),
                   title: Text(
                     'الكاميرا',
                     style: AppTextStyles.bodyMedium.copyWith(
@@ -79,19 +85,42 @@ class ProfileAvatarPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasImage = imagePath != null && imagePath!.isNotEmpty;
+    final hasLocalImage = imagePath != null && imagePath!.isNotEmpty;
+    final hasNetworkImage =
+        !hasLocalImage &&
+        networkImageUrl != null &&
+        networkImageUrl!.isNotEmpty;
+    final size = 80.r;
 
     return Column(
       children: [
         Stack(
           children: [
-            CircleAvatar(
-              radius: 40.r,
-              backgroundColor: AppColors.divider,
-              backgroundImage: hasImage ? FileImage(File(imagePath!)) : null,
-              child: hasImage
-                  ? null
-                  : Icon(Icons.person, size: 40.sp, color: AppColors.textHint),
+            ClipOval(
+              child: hasLocalImage
+                  ? Image.file(
+                      File(imagePath!),
+                      width: size,
+                      height: size,
+                      fit: BoxFit.cover,
+                    )
+                  : hasNetworkImage
+                  ? AppNetworkImage(
+                      imageUrl: networkImageUrl!,
+                      width: size,
+                      height: size,
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
+                      width: size,
+                      height: size,
+                      color: AppColors.divider,
+                      child: Icon(
+                        Icons.person,
+                        size: 40.sp,
+                        color: AppColors.textHint,
+                      ),
+                    ),
             ),
             Positioned(
               bottom: 0,
