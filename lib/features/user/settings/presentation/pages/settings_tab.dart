@@ -4,7 +4,7 @@ import 'package:travel_app/core/constants/app_colors.dart';
 import 'package:travel_app/core/constants/app_strings.dart';
 import 'package:travel_app/core/theme/app_sizes.dart';
 import 'package:travel_app/core/theme/app_text_styles.dart';
-import 'package:travel_app/features/user/profile/presentation/widgets/profile_logout_button.dart';
+import 'package:travel_app/features/user/settings/presentation/widgets/settings_logout_section.dart';
 import 'package:travel_app/features/user/settings/presentation/widgets/settings_menu_list.dart';
 
 class SettingsTab extends StatelessWidget {
@@ -31,7 +31,7 @@ class SettingsTab extends StatelessWidget {
           children: [
             const SettingsMenuList(),
             AppSizes.p32.verticalSpace,
-            const ProfileLogoutButton(),
+            const SettingsLogoutSection(),
             AppSizes.p32.verticalSpace,
           ],
         ),

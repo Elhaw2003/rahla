@@ -10,6 +10,21 @@ class AppStrings {
   static String get cancel => 'buttons.cancel'.tr();
   static String get submit => 'buttons.submit'.tr();
   static String get forgotPassword => 'buttons.forgotPassword'.tr();
+  static String get forgotPasswordTitle => 'forgotPassword.title'.tr();
+  static String get forgotPasswordSubtitle => 'forgotPassword.subtitle'.tr();
+  static String get forgotPasswordHintLabel => 'forgotPassword.hintLabel'.tr();
+  static String get forgotPasswordHintBody => 'forgotPassword.hintBody'.tr();
+  static String get forgotPasswordSendOtp => 'forgotPassword.sendOtp'.tr();
+  static String get forgotPasswordBackToLogin =>
+      'forgotPassword.backToLogin'.tr();
+  static String get resetPasswordTitle => 'resetPassword.title'.tr();
+  static String resetPasswordSubtitle(String email) =>
+      'resetPassword.subtitle'.tr(args: [email]);
+  static String get resetPasswordOtpLabel => 'resetPassword.otpLabel'.tr();
+  static String get resetPasswordResendOtp => 'resetPassword.resendOtp'.tr();
+  static String get resetPasswordSubmit => 'resetPassword.submit'.tr();
+  static String get resetPasswordOtpRequired =>
+      'resetPassword.otpRequired'.tr();
   static String get loginGoogle => 'buttons.loginGoogle'.tr();
   static String get loginFacebook => 'buttons.loginFacebook'.tr();
   static String get bookNow => 'buttons.bookNow'.tr();
@@ -214,6 +229,7 @@ class AppStrings {
   static String get profileHelpSupport => 'profile.helpSupport'.tr();
   static String get profileAboutApp => 'profile.aboutApp'.tr();
   static String get profileLogout => 'profile.logout'.tr();
+  static String get logoutConfirmMessage => 'profile.logoutConfirm'.tr();
   static String get profileSaveChanges => 'profile.saveChanges'.tr();
   static String get profileDetailsSection => 'profile.detailsSection'.tr();
   static String get profileRoleLabel => 'profile.roleLabel'.tr();

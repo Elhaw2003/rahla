@@ -9,8 +9,10 @@ import 'package:travel_app/core/networking/end_points.dart';
 import 'package:travel_app/core/services/notification_service.dart';
 import 'package:travel_app/features/user/auth/data/models/login_response_model.dart';
 import 'package:travel_app/features/user/auth/data/models/change_password_request_model.dart';
+import 'package:travel_app/features/user/auth/data/models/forgot_password_request_model.dart';
 import 'package:travel_app/features/user/auth/data/models/register_request_model.dart';
 import 'package:travel_app/features/user/auth/data/models/register_response_model.dart';
+import 'package:travel_app/features/user/auth/data/models/reset_password_request_model.dart';
 import 'package:travel_app/features/user/auth/data/models/update_profile_request_model.dart';
 
 abstract class AuthRepo {
@@ -32,6 +34,13 @@ abstract class AuthRepo {
   Future<Either<Failure, String>> changePassword({
     required ChangePasswordRequestModel request,
   });
+  Future<Either<Failure, String>> forgotPassword({
+    required ForgotPasswordRequestModel request,
+  });
+  Future<Either<Failure, String>> resetPassword({
+    required ResetPasswordRequestModel request,
+  });
+  Future<Either<Failure, String>> logout();
 }
 
 class AuthRepoImpl implements AuthRepo {
@@ -256,6 +265,63 @@ class AuthRepoImpl implements AuthRepo {
     } on AppException catch (e) {
       return Left(mapExceptionToFailure(e));
     } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> forgotPassword({
+    required ForgotPasswordRequestModel request,
+  }) async {
+    try {
+      final response = await _apiConsumer.post(
+        EndPoints.forgotPassword,
+        data: request.toJson(),
+      );
+      final json = Map<String, dynamic>.from(response as Map);
+      final message =
+          json['message'] as String? ?? 'تم إرسال رمز التحقق إلى بريدك';
+      return Right(message);
+    } on AppException catch (e) {
+      return Left(mapExceptionToFailure(e));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> resetPassword({
+    required ResetPasswordRequestModel request,
+  }) async {
+    try {
+      final response = await _apiConsumer.post(
+        EndPoints.resetPassword,
+        data: request.toJson(),
+      );
+      final json = Map<String, dynamic>.from(response as Map);
+      final message =
+          json['message'] as String? ?? 'تم إعادة تعيين كلمة المرور بنجاح';
+      return Right(message);
+    } on AppException catch (e) {
+      return Left(mapExceptionToFailure(e));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> logout() async {
+    try {
+      final response = await _apiConsumer.post(EndPoints.logout);
+      final json = Map<String, dynamic>.from(response as Map);
+      final message = json['message'] as String? ?? 'تم تسجيل الخروج بنجاح';
+      await _secureStorage.clearAuthData();
+      return Right(message);
+    } on AppException catch (e) {
+      await _secureStorage.clearAuthData();
+      return Left(mapExceptionToFailure(e));
+    } catch (e) {
+      await _secureStorage.clearAuthData();
       return Left(UnexpectedFailure(e.toString()));
     }
   }
