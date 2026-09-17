@@ -17,6 +17,8 @@ class RouteNames {
   static const String profile = '/profile';
   static const String editProfile = '/edit-profile';
   static const String changePassword = '/change-password';
+  static const String forgotPassword = '/forgot-password';
+  static const String resetPassword = '/reset-password';
   static const String settings = '/settings';
   static const String adminDashboard = '/admin-dashboard';
   static const String adminTrips = '/admin-trips';

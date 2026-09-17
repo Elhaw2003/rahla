@@ -4,8 +4,10 @@ import 'package:travel_app/core/di/dependency_injection.dart';
 import 'package:travel_app/features/user/not_found/presentation/pages/not_found_page.dart';
 import 'package:travel_app/features/user/splash/presentation/pages/splash_page.dart';
 import 'package:travel_app/features/user/auth/presentation/cubit/auth_cubit.dart';
+import 'package:travel_app/features/user/auth/presentation/pages/forgot_password_page.dart';
 import 'package:travel_app/features/user/auth/presentation/pages/login_page.dart';
 import 'package:travel_app/features/user/auth/presentation/pages/register_page.dart';
+import 'package:travel_app/features/user/auth/presentation/pages/reset_password_page.dart';
 import 'package:travel_app/features/user/home/presentation/cubit/home_cubit.dart';
 import 'package:travel_app/features/user/home/presentation/pages/home_page.dart';
 import 'package:travel_app/features/user/home/presentation/pages/trip_details_page.dart';
@@ -60,6 +62,23 @@ class AppRouter {
           create: (_) => getIt<AuthCubit>(),
           child: const RegisterPage(),
         ),
+      ),
+      GoRoute(
+        path: RouteNames.forgotPassword,
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<AuthCubit>(),
+          child: const ForgotPasswordPage(),
+        ),
+      ),
+      GoRoute(
+        path: RouteNames.resetPassword,
+        builder: (context, state) {
+          final email = state.extra as String? ?? '';
+          return BlocProvider(
+            create: (_) => getIt<AuthCubit>(),
+            child: ResetPasswordPage(email: email),
+          );
+        },
       ),
       GoRoute(
         path: RouteNames.home,

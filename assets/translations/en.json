@@ -58,6 +58,22 @@
     "newPassword": "Enter new password",
     "confirmNewPassword": "Re-enter new password"
   },
+  "forgotPassword": {
+    "title": "Forgot password?",
+    "subtitle": "Enter your email and we’ll send a verification code to reset it",
+    "hintLabel": "Recover access",
+    "hintBody": "Make sure this email is linked to your account. An OTP will arrive shortly.",
+    "sendOtp": "Send verification code",
+    "backToLogin": "Back to login"
+  },
+  "resetPassword": {
+    "title": "Reset password",
+    "subtitle": "Enter the code sent to {}\nthen choose a new password",
+    "otpLabel": "Verification code",
+    "resendOtp": "Resend code",
+    "submit": "Confirm new password",
+    "otpRequired": "Enter the 6-digit verification code"
+  },
   "splash": {
     "title": "Egypt Tours",
     "tagline": "Discover the beauty of your country",
@@ -179,6 +195,7 @@
     "helpSupport": "Help and Support",
     "aboutApp": "About the App",
     "logout": "Logout",
+    "logoutConfirm": "Are you sure you want to log out?",
     "saveChanges": "Save Changes",
     "detailsSection": "Account Details",
     "roleLabel": "Account Type",

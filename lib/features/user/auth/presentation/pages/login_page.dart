@@ -125,7 +125,8 @@ class _LoginPageState extends State<LoginPage> {
                     Align(
                       alignment: AlignmentDirectional.centerEnd,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () =>
+                            context.push(RouteNames.forgotPassword),
                         child: Text(
                           AppStrings.forgotPassword,
                           style: AppTextStyles.bodyMedium.copyWith(

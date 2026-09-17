@@ -50,4 +50,9 @@ class ProfileCubit extends Cubit<ProfileStates> {
       },
     );
   }
+
+  void clear() {
+    _currentUser = null;
+    emit(const ProfileInitial());
+  }
 }
