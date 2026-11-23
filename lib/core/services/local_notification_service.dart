@@ -4,14 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class LocalNotificationService {
-  LocalNotificationService();
+  LocalNotificationService({FlutterLocalNotificationsPlugin? plugin})
+    : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
 
   static const String _channelId = 'rahala_notifications';
   static const String _channelName = 'Rahala Notifications';
   static const String _channelDescription = 'General notifications from Rahala';
 
-  final FlutterLocalNotificationsPlugin _plugin =
-      FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _plugin;
 
   bool _initialized = false;
 
