@@ -10,6 +10,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:travel_app/app.dart';
 
 void main() {
+  // test("Strings must be reverse true", () {
+  //   String inititalWord = "hello";
+  //  reverseWord =  reverseString(initi);
+  // });
+  // expect(reverseWord, "olleh");
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const App());
