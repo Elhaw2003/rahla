@@ -12,10 +12,8 @@ class AuthCubit extends Cubit<AuthStates> {
   final AuthRepo _authRepo;
   final GoogleService _googleService;
 
-  AuthCubit({required AuthRepo authRepo, required GoogleService googleService})
-    : _authRepo = authRepo,
-      _googleService = googleService,
-      super(const AuthInitial());
+  AuthCubit({required this._authRepo, required this._googleService})
+    : super(const AuthInitial());
 
   Future<void> login({required String email, required String password}) async {
     emit(const AuthLoading());

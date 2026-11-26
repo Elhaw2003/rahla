@@ -4,9 +4,7 @@ import 'package:travel_app/features/user/explore/data/repo/explore_repo.dart';
 import 'package:travel_app/features/user/explore/presentation/cubit/explore_states.dart';
 
 class ExploreCubit extends Cubit<ExploreStates> {
-  ExploreCubit({required ExploreRepo exploreRepo})
-    : _exploreRepo = exploreRepo,
-      super(const ExploreInitial());
+  ExploreCubit({required this._exploreRepo}) : super(const ExploreInitial());
 
   final ExploreRepo _exploreRepo;
 

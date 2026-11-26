@@ -4,9 +4,8 @@ import 'package:travel_app/features/user/user_booking/data/repo/user_booking_rep
 import 'package:travel_app/features/user/user_booking/presentation/cubit/user_booking_states.dart';
 
 class UserBookingCubit extends Cubit<UserBookingStates> {
-  UserBookingCubit({required UserBookingRepo userBookingRepo})
-    : _userBookingRepo = userBookingRepo,
-      super(const UserBookingInitialStates());
+  UserBookingCubit({required this._userBookingRepo})
+    : super(const UserBookingInitialStates());
 
   final UserBookingRepo _userBookingRepo;
 
@@ -54,19 +53,18 @@ class UserBookingCubit extends Cubit<UserBookingStates> {
       limit: _pageSize,
     );
 
-    result.fold(
-      (failure) => emit(current.copyWith(isLoadingMore: false)),
-      (data) {
-        _userBookings = data;
-        _userBookingsList = List<UserBookingModel>.from(_userBookingsList)
-          ..addAll(data.bookings);
-        _totalItems = data.totalItems;
-        _totalPages = data.totalPages;
-        _currentPage = data.currentPage == 0 ? nextPage : data.currentPage;
-        _hasMore = data.totalPages > 0 && _currentPage < data.totalPages;
-        emit(_success(isLoadingMore: false));
-      },
-    );
+    result.fold((failure) => emit(current.copyWith(isLoadingMore: false)), (
+      data,
+    ) {
+      _userBookings = data;
+      _userBookingsList = List<UserBookingModel>.from(_userBookingsList)
+        ..addAll(data.bookings);
+      _totalItems = data.totalItems;
+      _totalPages = data.totalPages;
+      _currentPage = data.currentPage == 0 ? nextPage : data.currentPage;
+      _hasMore = data.totalPages > 0 && _currentPage < data.totalPages;
+      emit(_success(isLoadingMore: false));
+    });
   }
 
   Future<void> createUserBooking({
@@ -116,7 +114,9 @@ class UserBookingCubit extends Cubit<UserBookingStates> {
   Future<void> getUserBookingById(String bookingId) async {
     final id = bookingId.trim();
     if (id.isEmpty) {
-      emit(const UserBookingDetailsErrorStates(message: 'Booking id is missing'));
+      emit(
+        const UserBookingDetailsErrorStates(message: 'Booking id is missing'),
+      );
       return;
     }
 
@@ -125,7 +125,8 @@ class UserBookingCubit extends Cubit<UserBookingStates> {
     final result = await _userBookingRepo.getUserBookingById(bookingId: id);
 
     result.fold(
-      (failure) => emit(UserBookingDetailsErrorStates(message: failure.message)),
+      (failure) =>
+          emit(UserBookingDetailsErrorStates(message: failure.message)),
       (booking) => emit(UserBookingDetailsSuccessStates(booking: booking)),
     );
   }

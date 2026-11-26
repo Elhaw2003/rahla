@@ -4,9 +4,8 @@ import 'package:travel_app/features/user/favorites/data/repo/favorites_repo.dart
 import 'package:travel_app/features/user/favorites/presentation/cubit/favorites_states.dart';
 
 class FavoritesCubit extends Cubit<FavoritesStates> {
-  FavoritesCubit({required FavoritesRepo favoritesRepo})
-    : _favoritesRepo = favoritesRepo,
-      super(const FavoritesInitial());
+  FavoritesCubit({required this._favoritesRepo})
+    : super(const FavoritesInitial());
 
   final FavoritesRepo _favoritesRepo;
 

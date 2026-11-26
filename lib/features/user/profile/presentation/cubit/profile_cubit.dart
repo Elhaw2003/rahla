@@ -5,9 +5,7 @@ import 'package:travel_app/features/user/auth/data/repo/auth_repo.dart';
 import 'package:travel_app/features/user/profile/presentation/cubit/profile_states.dart';
 
 class ProfileCubit extends Cubit<ProfileStates> {
-  ProfileCubit({required AuthRepo authRepo})
-    : _authRepo = authRepo,
-      super(const ProfileInitial());
+  ProfileCubit({required this._authRepo}) : super(const ProfileInitial());
 
   final AuthRepo _authRepo;
   UserResponseModel? _currentUser;
@@ -25,7 +23,9 @@ class ProfileCubit extends Cubit<ProfileStates> {
     });
   }
 
-  Future<void> updateProfile({required UpdateProfileRequestModel request}) async {
+  Future<void> updateProfile({
+    required UpdateProfileRequestModel request,
+  }) async {
     final user = _currentUser;
     if (user == null) {
       emit(const ProfileFailure(message: 'User profile is not loaded'));
@@ -35,9 +35,8 @@ class ProfileCubit extends Cubit<ProfileStates> {
     emit(ProfileUpdating(user: user));
     final result = await _authRepo.updateProfile(request: request);
     result.fold(
-      (failure) => emit(
-        ProfileUpdateFailure(user: user, message: failure.message),
-      ),
+      (failure) =>
+          emit(ProfileUpdateFailure(user: user, message: failure.message)),
       (updatedUser) {
         _currentUser = updatedUser;
         emit(

@@ -5,9 +5,7 @@ import 'package:travel_app/features/user/home/data/repo/home_repo.dart';
 import 'package:travel_app/features/user/home/presentation/cubit/home_states.dart';
 
 class HomeCubit extends Cubit<HomeStates> {
-  HomeCubit({required HomeRepo homeRepo})
-    : _homeRepo = homeRepo,
-      super(const HomeInitial());
+  HomeCubit({required this._homeRepo}) : super(const HomeInitial());
 
   final HomeRepo _homeRepo;
 

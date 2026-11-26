@@ -8,8 +8,7 @@ import 'package:travel_app/features/user/favorites/data/models/favorite_model.da
 import 'package:travel_app/features/user/favorites/data/repo/favorites_repo.dart';
 
 class FavoritesRepoImplementation extends FavoritesRepo {
-  FavoritesRepoImplementation({required ApiConsumer apiConsumer})
-    : _apiConsumer = apiConsumer;
+  FavoritesRepoImplementation({required this._apiConsumer});
 
   final ApiConsumer _apiConsumer;
 
