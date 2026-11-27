@@ -29,12 +29,7 @@ class FavoritesList extends StatelessWidget {
     return ListView.separated(
       controller: scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.fromLTRB(
-        AppSizes.p16,
-        0,
-        AppSizes.p16,
-        AppSizes.p24,
-      ),
+      padding: EdgeInsets.fromLTRB(AppSizes.p16, 0, AppSizes.p16, AppSizes.p24),
       itemCount: itemCount,
       separatorBuilder: (_, _) => AppSizes.p16.verticalSpace,
       itemBuilder: (context, index) {

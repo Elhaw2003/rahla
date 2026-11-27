@@ -11,8 +11,7 @@ import 'package:travel_app/features/user/home/data/repo/home_repo.dart';
 class HomeRepoImplementation implements HomeRepo {
   final ApiConsumer _apiConsumer;
 
-  const HomeRepoImplementation({required ApiConsumer apiConsumer})
-    : _apiConsumer = apiConsumer;
+  const HomeRepoImplementation({required this._apiConsumer});
 
   @override
   Future<Either<Failure, List<OfferModel>>> getOffers() async {

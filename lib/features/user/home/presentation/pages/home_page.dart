@@ -22,11 +22,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = const [
-    HomeTab(),
-    BookingsTab(),
-    SettingsTab(),
-  ];
+  final List<Widget> _pages = const [HomeTab(), BookingsTab(), SettingsTab()];
 
   @override
   Widget build(BuildContext context) {

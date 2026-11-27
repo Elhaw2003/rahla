@@ -185,103 +185,107 @@ class _ExplorePageState extends State<ExplorePage> {
         }
       },
       child: BlocBuilder<CategoriesCubit, CategoriesStates>(
-      builder: (context, categoriesState) {
-        final categories = categoriesState is CategoriesSuccess
-            ? categoriesState.categories
-            : const <CategoryModel>[];
-        final isCategoriesLoading =
-            categoriesState is CategoriesLoading ||
-            categoriesState is CategoriesInitial;
+        builder: (context, categoriesState) {
+          final categories = categoriesState is CategoriesSuccess
+              ? categoriesState.categories
+              : const <CategoryModel>[];
+          final isCategoriesLoading =
+              categoriesState is CategoriesLoading ||
+              categoriesState is CategoriesInitial;
 
-        if (categoriesState is CategoriesSuccess) {
-          _maybeAutoSelect(categories);
-        }
+          if (categoriesState is CategoriesSuccess) {
+            _maybeAutoSelect(categories);
+          }
 
-        final selectedMatches = categories.where(
-          (c) => c.slug == _selectedCategorySlug,
-        );
-        final selectedCategory = selectedMatches.isEmpty
-            ? null
-            : selectedMatches.first;
+          final selectedMatches = categories.where(
+            (c) => c.slug == _selectedCategorySlug,
+          );
+          final selectedCategory = selectedMatches.isEmpty
+              ? null
+              : selectedMatches.first;
 
-        //   listener: (context, exploreState) {
-        //   if (exploreState is ExploreLoaded) {
-        //     final savedPosition = _scrollPositions[_selectedCategoryIndex];
+          //   listener: (context, exploreState) {
+          //   if (exploreState is ExploreLoaded) {
+          //     final savedPosition = _scrollPositions[_selectedCategoryIndex];
 
-        //     if (savedPosition != null && _scrollController.hasClients) {
-        //       WidgetsBinding.instance.addPostFrameCallback((_) {
-        //         if (!mounted || !_scrollController.hasClients) return;
+          //     if (savedPosition != null && _scrollController.hasClients) {
+          //       WidgetsBinding.instance.addPostFrameCallback((_) {
+          //         if (!mounted || !_scrollController.hasClients) return;
 
-        //         final maxScroll = _scrollController.position.maxScrollExtent;
+          //         final maxScroll = _scrollController.position.maxScrollExtent;
 
-        //         _scrollController.jumpTo(savedPosition.clamp(0.0, maxScroll));
-        //       });
-        //     }
-        //   }
-        // },
+          //         _scrollController.jumpTo(savedPosition.clamp(0.0, maxScroll));
+          //       });
+          //     }
+          //   }
+          // },
 
-        return BlocBuilder<ExploreCubit, ExploreStates>(
-          builder: (context, exploreState) {
-            final isExploreLoading =
-                exploreState is ExploreLoading ||
-                exploreState is ExploreInitial;
-            final isFullLoading = isCategoriesLoading && isExploreLoading;
+          return BlocBuilder<ExploreCubit, ExploreStates>(
+            builder: (context, exploreState) {
+              final isExploreLoading =
+                  exploreState is ExploreLoading ||
+                  exploreState is ExploreInitial;
+              final isFullLoading = isCategoriesLoading && isExploreLoading;
 
-            final loaded = exploreState is ExploreLoaded ? exploreState : null;
-            final tripsCount = isExploreLoading ? null : loaded?.total;
+              final loaded = exploreState is ExploreLoaded
+                  ? exploreState
+                  : null;
+              final tripsCount = isExploreLoading ? null : loaded?.total;
 
-            return Scaffold(
-              backgroundColor: AppColors.background,
-              appBar: _buildAppBar(),
-              body: isFullLoading
-                  ? const ExploreShimmerLoading()
-                  : RefreshIndicator(
-                      onRefresh: _onRefresh,
-                      color: AppColors.secondary,
-                      child: CustomScrollView(
-                        controller: _scrollController,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        slivers: [
-                          SliverToBoxAdapter(
-                            child: ExploreScrollIntro(
-                              selectedCategoryName: selectedCategory == null
-                                  ? null
-                                  : _categoryName(selectedCategory),
-                              tripsCount: tripsCount,
+              return Scaffold(
+                backgroundColor: AppColors.background,
+                appBar: _buildAppBar(),
+                body: isFullLoading
+                    ? const ExploreShimmerLoading()
+                    : RefreshIndicator(
+                        onRefresh: _onRefresh,
+                        color: AppColors.secondary,
+                        child: CustomScrollView(
+                          controller: _scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          slivers: [
+                            SliverToBoxAdapter(
+                              child: ExploreScrollIntro(
+                                selectedCategoryName: selectedCategory == null
+                                    ? null
+                                    : _categoryName(selectedCategory),
+                                tripsCount: tripsCount,
+                              ),
                             ),
-                          ),
-                          SliverPersistentHeader(
-                            pinned: true,
-                            delegate: ExploreCategoriesPinnedHeader(
-                              categories: categories,
-                              selectedCategorySlug: _selectedCategorySlug,
-                              onCategorySelected: _onCategorySelected,
+                            SliverPersistentHeader(
+                              pinned: true,
+                              delegate: ExploreCategoriesPinnedHeader(
+                                categories: categories,
+                                selectedCategorySlug: _selectedCategorySlug,
+                                onCategorySelected: _onCategorySelected,
+                              ),
                             ),
-                          ),
-                          if (exploreState is ExploreError)
-                            ExploreErrorSliver(
-                              message: exploreState.message,
-                              onRetry: _onRefresh,
-                            )
-                          else if (isExploreLoading)
-                            const SliverToBoxAdapter(
-                              child: AppShimmer(child: ExploreTripsShimmer()),
-                            )
-                          else if (loaded != null)
-                            ExploreTripsSliver(
-                              trips: loaded.trips,
-                              isLoadingMore: loaded.isLoadingMore,
-                            )
-                          else
-                            const SliverToBoxAdapter(child: SizedBox.shrink()),
-                        ],
+                            if (exploreState is ExploreError)
+                              ExploreErrorSliver(
+                                message: exploreState.message,
+                                onRetry: _onRefresh,
+                              )
+                            else if (isExploreLoading)
+                              const SliverToBoxAdapter(
+                                child: AppShimmer(child: ExploreTripsShimmer()),
+                              )
+                            else if (loaded != null)
+                              ExploreTripsSliver(
+                                trips: loaded.trips,
+                                isLoadingMore: loaded.isLoadingMore,
+                              )
+                            else
+                              const SliverToBoxAdapter(
+                                child: SizedBox.shrink(),
+                              ),
+                          ],
+                        ),
                       ),
-                    ),
-            );
-          },
-        );
-      },
-    ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

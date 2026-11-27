@@ -43,7 +43,9 @@ class _AppTextFieldState extends State<AppTextField> {
       readOnly: widget.readOnly,
       onTap: widget.onTap,
       onChanged: widget.onChanged,
-      obscureText: widget.type == AppTextFieldType.password ? _obscureText : false,
+      obscureText: widget.type == AppTextFieldType.password
+          ? _obscureText
+          : false,
       keyboardType: _getKeyboardType(),
       maxLines: widget.type == AppTextFieldType.multiline ? 4 : 1,
       minLines: widget.type == AppTextFieldType.multiline ? 3 : 1,
@@ -53,7 +55,9 @@ class _AppTextFieldState extends State<AppTextField> {
         prefixIcon: widget.prefixIcon ?? _getDefaultPrefixIcon(),
         suffixIcon: widget.type == AppTextFieldType.password
             ? IconButton(
-                icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
+                icon: Icon(
+                  _obscureText ? Icons.visibility_off : Icons.visibility,
+                ),
                 onPressed: () {
                   setState(() {
                     _obscureText = !_obscureText;

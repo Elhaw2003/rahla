@@ -100,10 +100,7 @@ class FavoritesToggleFailure extends FavoritesStates {
   final String message;
   final int id;
 
-  const FavoritesToggleFailure({
-    required this.message,
-    required this.id,
-  });
+  const FavoritesToggleFailure({required this.message, required this.id});
 
   @override
   List<Object?> get props => [message, id];

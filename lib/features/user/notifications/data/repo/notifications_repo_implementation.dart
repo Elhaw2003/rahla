@@ -8,8 +8,7 @@ import 'package:travel_app/features/user/notifications/data/models/notification_
 import 'package:travel_app/features/user/notifications/data/repo/notifications_repo.dart';
 
 class NotificationsRepoImplementation implements NotificationsRepo {
-  NotificationsRepoImplementation({required ApiConsumer apiConsumer})
-    : _apiConsumer = apiConsumer;
+  NotificationsRepoImplementation({required this._apiConsumer});
 
   final ApiConsumer _apiConsumer;
 

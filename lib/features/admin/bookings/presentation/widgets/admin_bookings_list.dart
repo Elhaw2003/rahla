@@ -60,10 +60,7 @@ class AdminBookingsList extends StatelessWidget {
           customerPhone: booking.user.phone,
           customerImage: _imageUrl(booking.user.profileImage),
           tripTitle: booking.trip.title,
-          tripDates: _formatDates(
-            booking.trip.startDate,
-            booking.trip.endDate,
-          ),
+          tripDates: _formatDates(booking.trip.startDate, booking.trip.endDate),
           tripDuration: _formatDuration(
             booking.trip.startDate,
             booking.trip.endDate,

@@ -37,9 +37,7 @@ class CreateBookingPriceSummary extends StatelessWidget {
             AppColors.secondary.withValues(alpha: 0.12),
           ],
         ),
-        border: Border.all(
-          color: AppColors.secondary.withValues(alpha: 0.28),
-        ),
+        border: Border.all(color: AppColors.secondary.withValues(alpha: 0.28)),
       ),
       child: Column(
         children: [
@@ -64,7 +62,8 @@ class CreateBookingPriceSummary extends StatelessWidget {
           _PriceRow(
             label:
                 '${AppStrings.bookingConfirmationTripCost} ($seats × ${_formatPrice(pricePerSeat)})',
-            value: '${_formatPrice(seats * pricePerSeat)} ${AppStrings.currencyEGP}',
+            value:
+                '${_formatPrice(seats * pricePerSeat)} ${AppStrings.currencyEGP}',
           ),
           AppSizes.p12.verticalSpace,
           const Divider(height: 1, color: AppColors.divider),

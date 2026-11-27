@@ -57,9 +57,8 @@ class UserBookingsPageData {
       bookings: rawBookings
           .whereType<Map>()
           .map(
-            (item) => UserBookingModel.fromJson(
-              Map<String, dynamic>.from(item),
-            ),
+            (item) =>
+                UserBookingModel.fromJson(Map<String, dynamic>.from(item)),
           )
           .toList(),
     );
@@ -187,9 +186,7 @@ class UserBookingModel {
       userId: userId,
       user: user,
       trip: tripField is Map
-          ? UserBookingTripModel.fromJson(
-              Map<String, dynamic>.from(tripField),
-            )
+          ? UserBookingTripModel.fromJson(Map<String, dynamic>.from(tripField))
           : null,
       numberOfSeats: (json['numberOfSeats'] as num?)?.toInt() ?? 1,
       totalPrice: (json['totalPrice'] as num?)?.toDouble() ?? 0,
@@ -230,13 +227,11 @@ class UserBookingModel {
     return '';
   }
 
-  String get origin =>
-      tripSnapshot?.origin?.trim().isNotEmpty == true
+  String get origin => tripSnapshot?.origin?.trim().isNotEmpty == true
       ? tripSnapshot!.origin!
       : (trip?.origin?.trim() ?? '');
 
-  String get destination =>
-      tripSnapshot?.destination?.trim().isNotEmpty == true
+  String get destination => tripSnapshot?.destination?.trim().isNotEmpty == true
       ? tripSnapshot!.destination!
       : (trip?.destination?.trim() ?? '');
 

@@ -8,8 +8,7 @@ import 'package:travel_app/features/user/user_booking/data/models/user_booking_m
 import 'package:travel_app/features/user/user_booking/data/repo/user_booking_repo.dart';
 
 class UserBookingRepoImplementation implements UserBookingRepo {
-  UserBookingRepoImplementation({required ApiConsumer apiConsumer})
-    : _apiConsumer = apiConsumer;
+  UserBookingRepoImplementation({required this._apiConsumer});
 
   final ApiConsumer _apiConsumer;
 

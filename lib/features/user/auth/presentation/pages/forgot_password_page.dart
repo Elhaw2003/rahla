@@ -64,10 +64,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           listener: (context, state) {
             if (state is ForgotPasswordSuccess) {
               AppSnackbar.showSuccess(context: context, message: state.message);
-              context.push(
-                RouteNames.resetPassword,
-                extra: state.email,
-              );
+              context.push(RouteNames.resetPassword, extra: state.email);
             } else if (state is AuthFailure) {
               AppSnackbar.showError(context: context, message: state.message);
             }

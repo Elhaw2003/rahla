@@ -85,92 +85,92 @@ class _AdminBookingDetailsPageState extends State<AdminBookingDetailsPage> {
         final isBusy = isApproveLoading || isRejectLoading;
 
         return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: isBusy ? null : () => Navigator.of(context).maybePop(),
-        ),
-        title: Text(
-          AppStrings.adminBookingDetailsTitle,
-          style: AppTextStyles.titleLarge,
-        ),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(
-                AppSizes.p20,
-                AppSizes.p16,
-                AppSizes.p20,
-                AppSizes.p24,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildStatusBanner(),
-                  AppSizes.p20.verticalSpace,
-                  _buildSectionHeader(
-                    title: AppStrings.adminCustomerDataSection,
-                    icon: Icons.person_outline,
-                  ),
-                  AppSizes.p8.verticalSpace,
-                  _buildCustomerCard(
-                    name: customerName,
-                    email: customerEmail,
-                    phone: customerPhone,
-                    imageUrl: customerImage,
-                  ),
-                  AppSizes.p24.verticalSpace,
-                  _buildSectionHeader(
-                    title: AppStrings.adminTripDataSection,
-                    icon: Icons.card_travel_outlined,
-                  ),
-                  AppSizes.p8.verticalSpace,
-                  _buildTripCard(
-                    title: tripTitle,
-                    duration: tripDuration,
-                    dates: tripDates,
-                    imagePath: tripImage,
-                    origin: origin,
-                    destination: destination,
-                  ),
-                  AppSizes.p24.verticalSpace,
-                  _buildSectionHeader(
-                    title: AppStrings.adminBookingDetailsSection,
-                    icon: Icons.receipt_long_outlined,
-                  ),
-                  AppSizes.p8.verticalSpace,
-                  _buildBookingDetailsCard(
-                    bookingNumber: bookingNumber,
-                    requestDate: requestDate,
-                    passengersCount: passengersCount,
-                    paymentMethod: paymentMethod,
-                    totalAmount: totalAmount,
-                  ),
-                  if (customerNotes.isNotEmpty) ...[
-                    AppSizes.p24.verticalSpace,
-                    _buildSectionHeader(
-                      title: AppStrings.adminCustomerNotesSection,
-                      icon: Icons.chat_bubble_outline,
-                    ),
-                    AppSizes.p8.verticalSpace,
-                    _buildCustomerNotesCard(notes: customerNotes),
-                  ],
-                ],
-              ),
-            ).expanded(),
-            _buildBottomActionBar(
-              context,
-              customerPhone: customerPhone,
-              isApproveLoading: isApproveLoading,
-              isRejectLoading: isRejectLoading,
+          backgroundColor: AppColors.background,
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: isBusy ? null : () => Navigator.of(context).maybePop(),
             ),
-          ],
-        ),
-      ),
+            title: Text(
+              AppStrings.adminBookingDetailsTitle,
+              style: AppTextStyles.titleLarge,
+            ),
+            centerTitle: true,
+          ),
+          body: SafeArea(
+            child: Column(
+              children: [
+                SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(
+                    AppSizes.p20,
+                    AppSizes.p16,
+                    AppSizes.p20,
+                    AppSizes.p24,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildStatusBanner(),
+                      AppSizes.p20.verticalSpace,
+                      _buildSectionHeader(
+                        title: AppStrings.adminCustomerDataSection,
+                        icon: Icons.person_outline,
+                      ),
+                      AppSizes.p8.verticalSpace,
+                      _buildCustomerCard(
+                        name: customerName,
+                        email: customerEmail,
+                        phone: customerPhone,
+                        imageUrl: customerImage,
+                      ),
+                      AppSizes.p24.verticalSpace,
+                      _buildSectionHeader(
+                        title: AppStrings.adminTripDataSection,
+                        icon: Icons.card_travel_outlined,
+                      ),
+                      AppSizes.p8.verticalSpace,
+                      _buildTripCard(
+                        title: tripTitle,
+                        duration: tripDuration,
+                        dates: tripDates,
+                        imagePath: tripImage,
+                        origin: origin,
+                        destination: destination,
+                      ),
+                      AppSizes.p24.verticalSpace,
+                      _buildSectionHeader(
+                        title: AppStrings.adminBookingDetailsSection,
+                        icon: Icons.receipt_long_outlined,
+                      ),
+                      AppSizes.p8.verticalSpace,
+                      _buildBookingDetailsCard(
+                        bookingNumber: bookingNumber,
+                        requestDate: requestDate,
+                        passengersCount: passengersCount,
+                        paymentMethod: paymentMethod,
+                        totalAmount: totalAmount,
+                      ),
+                      if (customerNotes.isNotEmpty) ...[
+                        AppSizes.p24.verticalSpace,
+                        _buildSectionHeader(
+                          title: AppStrings.adminCustomerNotesSection,
+                          icon: Icons.chat_bubble_outline,
+                        ),
+                        AppSizes.p8.verticalSpace,
+                        _buildCustomerNotesCard(notes: customerNotes),
+                      ],
+                    ],
+                  ),
+                ).expanded(),
+                _buildBottomActionBar(
+                  context,
+                  customerPhone: customerPhone,
+                  isApproveLoading: isApproveLoading,
+                  isRejectLoading: isRejectLoading,
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -703,10 +703,7 @@ class _AdminBookingDetailsPageState extends State<AdminBookingDetailsPage> {
         ? SizedBox(
             height: 18.h,
             width: 18.w,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: foreground,
-            ),
+            child: CircularProgressIndicator(strokeWidth: 2, color: foreground),
           )
         : Row(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -38,10 +38,7 @@ class FavoritesErrorView extends StatelessWidget {
               ),
             ),
             AppSizes.p20.verticalSpace,
-            AppButton(
-              text: AppStrings.favoritesRetry,
-              onPressed: onRetry,
-            ),
+            AppButton(text: AppStrings.favoritesRetry, onPressed: onRetry),
           ],
         ),
       ),

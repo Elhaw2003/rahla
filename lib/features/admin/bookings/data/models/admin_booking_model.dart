@@ -233,9 +233,11 @@ class TripSnapshotModel {
       coverImage: json['coverImage'] ?? '',
       origin: json['origin'] ?? '',
       destination: json['destination'] ?? '',
-      startDate: DateTime.tryParse(json['startDate']?.toString() ?? '') ??
+      startDate:
+          DateTime.tryParse(json['startDate']?.toString() ?? '') ??
           DateTime.now(),
-      endDate: DateTime.tryParse(json['endDate']?.toString() ?? '') ??
+      endDate:
+          DateTime.tryParse(json['endDate']?.toString() ?? '') ??
           DateTime.now(),
       pricePerSeat: (json['pricePerSeat'] as num?)?.toDouble() ?? 0,
     );

@@ -4,9 +4,8 @@ import 'package:travel_app/features/user/notifications/data/repo/notifications_r
 import 'package:travel_app/features/user/notifications/presentation/cubit/notifications_states.dart';
 
 class NotificationsCubit extends Cubit<NotificationsStates> {
-  NotificationsCubit({required NotificationsRepo notificationsRepo})
-    : _notificationsRepo = notificationsRepo,
-      super(const NotificationsInitialStates());
+  NotificationsCubit({required this._notificationsRepo})
+    : super(const NotificationsInitialStates());
 
   final NotificationsRepo _notificationsRepo;
 

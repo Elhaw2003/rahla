@@ -30,11 +30,7 @@ class AdminBookingsTripFilter extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.filter_alt_outlined,
-            size: 20.r,
-            color: AppColors.primary,
-          ),
+          Icon(Icons.filter_alt_outlined, size: 20.r, color: AppColors.primary),
           AppSizes.p8.horizontalSpace,
           Text(
             'تصفية حسب الرحلة:',

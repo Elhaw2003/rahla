@@ -8,10 +8,7 @@ import 'package:travel_app/core/theme/app_text_styles.dart';
 class CreateBookingNotesField extends StatelessWidget {
   final TextEditingController controller;
 
-  const CreateBookingNotesField({
-    super.key,
-    required this.controller,
-  });
+  const CreateBookingNotesField({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +47,10 @@ class CreateBookingNotesField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.r16),
-              borderSide: const BorderSide(color: AppColors.secondary, width: 1.4),
+              borderSide: const BorderSide(
+                color: AppColors.secondary,
+                width: 1.4,
+              ),
             ),
           ),
         ),

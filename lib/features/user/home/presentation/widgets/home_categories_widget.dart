@@ -68,10 +68,7 @@ class HomeCategoriesWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              AppStrings.homeCategories,
-              style: AppTextStyles.titleMedium,
-            ),
+            Text(AppStrings.homeCategories, style: AppTextStyles.titleMedium),
             GestureDetector(
               onTap: () => _openExplore(context),
               child: Text(

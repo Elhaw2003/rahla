@@ -8,10 +8,7 @@ class AdminBookingsAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   final int pendingCount;
 
-  const AdminBookingsAppBar({
-    super.key,
-    this.pendingCount = 0,
-  });
+  const AdminBookingsAppBar({super.key, this.pendingCount = 0});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);

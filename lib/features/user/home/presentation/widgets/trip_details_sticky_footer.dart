@@ -14,10 +14,7 @@ import 'package:travel_app/features/admin/trips/data/models/admin_trips_model.da
 class TripDetailsStickyFooter extends StatelessWidget {
   final AdminTripModel trip;
 
-  const TripDetailsStickyFooter({
-    super.key,
-    required this.trip,
-  });
+  const TripDetailsStickyFooter({super.key, required this.trip});
 
   String _formatPrice(num price) {
     return NumberFormat('#,###').format(price);
@@ -75,10 +72,8 @@ class TripDetailsStickyFooter extends StatelessWidget {
             AppSizes.p16.horizontalSpace,
             AppButton(
               text: AppStrings.bookNow,
-              onPressed: () => context.push(
-                RouteNames.bookingConfirmation,
-                extra: trip,
-              ),
+              onPressed: () =>
+                  context.push(RouteNames.bookingConfirmation, extra: trip),
             ).expanded(),
           ],
         ),

@@ -83,10 +83,7 @@ class ExploreTripCard extends StatelessWidget {
                           height: 168.h,
                           fit: BoxFit.cover,
                         )
-                      : Image.asset(
-                          AppAssets.homeFeatured,
-                          fit: BoxFit.cover,
-                        ),
+                      : Image.asset(AppAssets.homeFeatured, fit: BoxFit.cover),
                   Positioned(
                     top: AppSizes.p12,
                     right: AppSizes.p12,

@@ -38,9 +38,7 @@ class AdminTripsRepoImpl implements AdminTripsRepo {
       );
 
       return Right(
-        AdminTripsModel.fromJson(
-          Map<String, dynamic>.from(response as Map),
-        ),
+        AdminTripsModel.fromJson(Map<String, dynamic>.from(response as Map)),
       );
     } on AppException catch (e) {
       return Left(mapExceptionToFailure(e));

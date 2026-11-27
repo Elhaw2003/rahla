@@ -28,9 +28,8 @@ class AppNetworkImage extends StatelessWidget {
         width: width,
         height: height,
         fit: fit,
-        placeholder: (context, url) => const Center(
-          child: AppLoading(size: 24),
-        ),
+        placeholder: (context, url) =>
+            const Center(child: AppLoading(size: 24)),
         errorWidget: (context, url, error) => Container(
           width: width,
           height: height,

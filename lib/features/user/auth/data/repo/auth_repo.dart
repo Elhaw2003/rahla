@@ -48,10 +48,9 @@ class AuthRepoImpl implements AuthRepo {
   final SecureStorageCaching _secureStorage;
 
   const AuthRepoImpl({
-    required ApiConsumer apiConsumer,
-    required SecureStorageCaching secureStorage,
-  }) : _apiConsumer = apiConsumer,
-       _secureStorage = secureStorage;
+    required this._apiConsumer,
+    required this._secureStorage,
+  });
 
   @override
   Future<Either<Failure, LoginResponseModel>> login({
@@ -260,7 +259,8 @@ class AuthRepoImpl implements AuthRepo {
         data: request.toJson(),
       );
       final json = Map<String, dynamic>.from(response as Map);
-      final message = json['message'] as String? ?? 'تم تغيير كلمة المرور بنجاح';
+      final message =
+          json['message'] as String? ?? 'تم تغيير كلمة المرور بنجاح';
       return Right(message);
     } on AppException catch (e) {
       return Left(mapExceptionToFailure(e));

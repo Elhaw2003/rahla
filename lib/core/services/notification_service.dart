@@ -87,9 +87,7 @@ class NotificationService {
       if (!isLoggedIn) return;
       if (!getIt.isRegistered<AuthRepo>()) return;
 
-      final result = await getIt<AuthRepo>().registerFcmToken(
-        fcmToken: token,
-      );
+      final result = await getIt<AuthRepo>().registerFcmToken(fcmToken: token);
       result.fold(
         (failure) => debugPrint(
           'NotificationService: failed to send FCM token: ${failure.message}',
