@@ -97,7 +97,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   AppSizes.p32.verticalSpace,
                   AppButton(
                     text: AppStrings.profileEditAccount,
-                    icon: Icon(Icons.edit_outlined, size: 18.sp, color: Colors.white),
+                    icon: Icon(
+                      Icons.edit_outlined,
+                      size: 18.sp,
+                      color: Colors.white,
+                    ),
                     onPressed: () => context.push(RouteNames.editProfile),
                   ),
                   AppSizes.p24.verticalSpace,

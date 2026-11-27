@@ -51,16 +51,16 @@ class AppButton extends StatelessWidget {
                   : Colors.white,
             ),
           )
-        : icon != null 
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  icon!,
-                  SizedBox(width: AppSizes.p8),
-                  Text(text),
-                ],
-              )
-            : Text(text);
+        : icon != null
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              icon!,
+              SizedBox(width: AppSizes.p8),
+              Text(text),
+            ],
+          )
+        : Text(text);
 
     if (type == AppButtonType.outlined) {
       return OutlinedButton(
@@ -74,9 +74,7 @@ class AppButton extends StatelessWidget {
     }
 
     return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: foregroundColor,
-      ),
+      style: ElevatedButton.styleFrom(backgroundColor: foregroundColor),
       onPressed: actuallyDisabled ? null : onPressed,
       child: child,
     );

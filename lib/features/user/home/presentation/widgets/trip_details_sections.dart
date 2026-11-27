@@ -137,11 +137,7 @@ class _Accordion extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: isExpanded
-                      ? Icon(
-                          Icons.check,
-                          size: 14.sp,
-                          color: AppColors.primary,
-                        )
+                      ? Icon(Icons.check, size: 14.sp, color: AppColors.primary)
                       : null,
                 ),
                 AppSizes.p12.horizontalSpace,

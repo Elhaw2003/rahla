@@ -47,7 +47,11 @@ class _NotificationCardShimmer extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(height: 14.h, width: double.infinity, color: Colors.white),
+                Container(
+                  height: 14.h,
+                  width: double.infinity,
+                  color: Colors.white,
+                ),
                 AppSizes.p8.verticalSpace,
                 Container(height: 12.h, width: 200.w, color: Colors.white),
                 AppSizes.p8.verticalSpace,

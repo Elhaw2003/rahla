@@ -8,9 +8,6 @@ class ForgotPasswordRequestModel {
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      'email': email,
-      'isProtected': isProtected,
-    };
+    return {'email': email, 'isProtected': isProtected};
   }
 }

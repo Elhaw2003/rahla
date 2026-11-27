@@ -18,8 +18,7 @@ class BookingDetailsTripSection extends StatelessWidget {
   }
 
   String get _dateRange {
-    final start =
-        booking.tripSnapshot?.startDate ?? booking.trip?.startDate;
+    final start = booking.tripSnapshot?.startDate ?? booking.trip?.startDate;
     final end = booking.tripSnapshot?.endDate ?? booking.trip?.endDate;
     final startLabel = _formatDate(start);
     final endLabel = _formatDate(end);

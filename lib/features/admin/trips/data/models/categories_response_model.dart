@@ -19,7 +19,8 @@ class CategoriesResponseModel {
       success: json['success'] as bool? ?? false,
       code: json['code'] as String? ?? '',
       message: json['message'] as String? ?? '',
-      data: (json['data'] as List?)
+      data:
+          (json['data'] as List?)
               ?.map(
                 (item) => CategoryModel.fromJson(
                   Map<String, dynamic>.from(item as Map),
@@ -71,7 +72,6 @@ class CategoryModel {
     );
   }
 
-  String get displayName => nameAr?.isNotEmpty == true
-      ? nameAr!
-      : (nameEn ?? '');
+  String get displayName =>
+      nameAr?.isNotEmpty == true ? nameAr! : (nameEn ?? '');
 }

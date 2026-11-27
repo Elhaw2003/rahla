@@ -56,9 +56,8 @@ class NotificationsPageData {
       notifications: raw
           .whereType<Map>()
           .map(
-            (item) => NotificationModel.fromJson(
-              Map<String, dynamic>.from(item),
-            ),
+            (item) =>
+                NotificationModel.fromJson(Map<String, dynamic>.from(item)),
           )
           .toList(),
       unreadCount: json['unreadCount'] as int? ?? 0,
@@ -99,8 +98,7 @@ class NotificationModel {
     if (userField is String && userField.isNotEmpty) {
       userId = userField;
     } else if (userField is Map) {
-      userId =
-          userField['_id'] as String? ?? userField['id'] as String?;
+      userId = userField['_id'] as String? ?? userField['id'] as String?;
     }
 
     final payloadField = json['data'];
@@ -169,10 +167,7 @@ class NotificationPayloadModel {
   final String? bookingId;
   final String? tripId;
 
-  const NotificationPayloadModel({
-    this.bookingId,
-    this.tripId,
-  });
+  const NotificationPayloadModel({this.bookingId, this.tripId});
 
   factory NotificationPayloadModel.fromJson(Map<String, dynamic> json) {
     return NotificationPayloadModel(

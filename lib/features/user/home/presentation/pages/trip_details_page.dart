@@ -177,9 +177,7 @@ class _TripDetailsPageState extends State<TripDetailsPage> {
                         height: 18.r,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: _isScrolled
-                              ? AppColors.error
-                              : Colors.white,
+                          color: _isScrolled ? AppColors.error : Colors.white,
                         ),
                       )
                     : Icon(

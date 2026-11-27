@@ -131,7 +131,9 @@ class UserResponseModel extends Equatable {
     final path = profileImage;
     if (path == null || path.isEmpty) return '';
     if (path.startsWith('http')) return path;
-    final baseOrigin = EndPoints.baseUrl.replaceAll('/api/v1/', '').replaceAll('/api/v1', '');
+    final baseOrigin = EndPoints.baseUrl
+        .replaceAll('/api/v1/', '')
+        .replaceAll('/api/v1', '');
     final cleanPath = path.startsWith('/') ? path.substring(1) : path;
     return '$baseOrigin/$cleanPath';
   }

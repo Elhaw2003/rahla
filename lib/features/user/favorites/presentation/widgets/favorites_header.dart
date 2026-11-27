@@ -32,9 +32,7 @@ class FavoritesHeader extends StatelessWidget {
               AppColors.error.withValues(alpha: 0.10),
             ],
           ),
-          border: Border.all(
-            color: AppColors.error.withValues(alpha: 0.18),
-          ),
+          border: Border.all(color: AppColors.error.withValues(alpha: 0.18)),
         ),
         child: Row(
           children: [

@@ -10,10 +10,7 @@ class ApiInterceptor extends Interceptor {
 
   Completer<bool>? _refreshCompleter;
 
-  ApiInterceptor({
-    required this.secureStorage,
-    required this.dio,
-  });
+  ApiInterceptor({required this.secureStorage, required this.dio});
 
   @override
   void onRequest(
@@ -39,8 +36,9 @@ class ApiInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     final isUnauthorized = err.response?.statusCode == 401;
-    final isRefreshCall =
-        err.requestOptions.path.contains(EndPoints.refreshToken);
+    final isRefreshCall = err.requestOptions.path.contains(
+      EndPoints.refreshToken,
+    );
 
     if (!isUnauthorized || isRefreshCall) {
       handler.next(err);

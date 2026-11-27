@@ -169,8 +169,6 @@ class FavoritesCubit extends Cubit<FavoritesStates> {
   }
 }
 
-
-
 //import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:rahala/features/admin/trips/data/models/trip_model.dart';
 // import 'package:rahala/features/user/favorites/presentation/cubit/favorites_states.dart';

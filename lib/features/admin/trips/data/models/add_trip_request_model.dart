@@ -66,9 +66,7 @@ class TripDayRequest {
       id: model.id ?? '',
       dayNumber: model.dayNumber,
       title: model.title ?? '',
-      activities: model.activities
-          .map(ActivityRequest.fromModel)
-          .toList(),
+      activities: model.activities.map(ActivityRequest.fromModel).toList(),
     );
   }
 
@@ -86,7 +84,8 @@ class TripDayRequest {
       id: json['_id'] as String? ?? json['id'] as String? ?? '',
       dayNumber: json['dayNumber'] as int? ?? 1,
       title: json['title'] as String? ?? '',
-      activities: (json['activities'] as List?)
+      activities:
+          (json['activities'] as List?)
               ?.map(
                 (e) => ActivityRequest.fromJson(
                   Map<String, dynamic>.from(e as Map),
@@ -213,11 +212,12 @@ class CreateTripRequest {
       status: json['status'] as String? ?? 'published',
       isProtected: json['isProtected'] as bool? ?? true,
       cancelPolicy: json['cancelPolicy'] as String? ?? '',
-      included: (json['included'] as List?)?.map((e) => e.toString()).toList() ??
-          [],
-      excluded: (json['excluded'] as List?)?.map((e) => e.toString()).toList() ??
-          [],
-      days: (json['days'] as List?)
+      included:
+          (json['included'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      excluded:
+          (json['excluded'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      days:
+          (json['days'] as List?)
               ?.map(
                 (e) => TripDayRequest.fromJson(
                   Map<String, dynamic>.from(e as Map),

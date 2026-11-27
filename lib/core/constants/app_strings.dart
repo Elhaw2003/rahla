@@ -75,7 +75,8 @@ class AppStrings {
   static String get currentPasswordHint => 'hints.currentPassword'.tr();
   static String get newPasswordHint => 'hints.newPassword'.tr();
   static String get confirmNewPasswordHint => 'hints.confirmNewPassword'.tr();
-  static String get changePasswordSubtitle => 'messages.changePasswordSubtitle'.tr();
+  static String get changePasswordSubtitle =>
+      'messages.changePasswordSubtitle'.tr();
   static String get changePasswordSubmit => 'buttons.changePassword'.tr();
 
   // Splash

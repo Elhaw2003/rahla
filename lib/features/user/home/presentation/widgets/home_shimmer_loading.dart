@@ -202,7 +202,9 @@ class _HomeShimmerLoadingState extends State<HomeShimmerLoading>
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(AppSizes.r16),
-              border: Border.all(color: AppColors.border.withValues(alpha: 0.4)),
+              border: Border.all(
+                color: AppColors.border.withValues(alpha: 0.4),
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,7 +225,11 @@ class _HomeShimmerLoadingState extends State<HomeShimmerLoading>
                         borderRadius: 6,
                       ),
                       AppSizes.p8.verticalSpace,
-                      AppShimmerBone(width: 54.w, height: 12.h, borderRadius: 6),
+                      AppShimmerBone(
+                        width: 54.w,
+                        height: 12.h,
+                        borderRadius: 6,
+                      ),
                     ],
                   ),
                 ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 import '../constants/app_colors.dart';
 import 'app_sizes.dart';
 import 'app_text_styles.dart';
@@ -29,7 +28,9 @@ class AppTheme {
         centerTitle: true,
         backgroundColor: AppColors.background,
         iconTheme: const IconThemeData(color: AppColors.textPrimary),
-        titleTextStyle: AppTextStyles.titleLarge.copyWith(color: AppColors.textPrimary),
+        titleTextStyle: AppTextStyles.titleLarge.copyWith(
+          color: AppColors.textPrimary,
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -56,7 +57,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.surface,
-        contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.p16, vertical: AppSizes.p16),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: AppSizes.p16,
+          vertical: AppSizes.p16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.r8),
           borderSide: const BorderSide(color: AppColors.border),
@@ -73,7 +77,9 @@ class AppTheme {
           borderRadius: BorderRadius.circular(AppSizes.r8),
           borderSide: const BorderSide(color: AppColors.error),
         ),
-        labelStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+        labelStyle: AppTextStyles.bodyMedium.copyWith(
+          color: AppColors.textSecondary,
+        ),
         hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textHint),
       ),
     );
@@ -127,7 +133,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.primary,
-        contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.p16, vertical: AppSizes.p16),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: AppSizes.p16,
+          vertical: AppSizes.p16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.r8),
           borderSide: const BorderSide(color: AppColors.primaryLight),
@@ -144,7 +153,9 @@ class AppTheme {
           borderRadius: BorderRadius.circular(AppSizes.r8),
           borderSide: const BorderSide(color: AppColors.error),
         ),
-        labelStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textHint),
+        labelStyle: AppTextStyles.bodyMedium.copyWith(
+          color: AppColors.textHint,
+        ),
         hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textHint),
       ),
     );

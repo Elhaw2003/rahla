@@ -19,12 +19,11 @@ class OffersResponseModel {
       success: json['success'] as bool? ?? false,
       code: json['code'] as String? ?? '',
       message: json['message'] as String? ?? '',
-      data: (json['data'] as List?)
+      data:
+          (json['data'] as List?)
               ?.whereType<Map>()
               .map(
-                (item) => OfferModel.fromJson(
-                  Map<String, dynamic>.from(item),
-                ),
+                (item) => OfferModel.fromJson(Map<String, dynamic>.from(item)),
               )
               .toList() ??
           const [],

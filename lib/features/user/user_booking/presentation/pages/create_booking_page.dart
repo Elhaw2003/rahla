@@ -82,9 +82,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
             context.pop(true);
             return;
           }
-          context.pushReplacement(
-            RouteNames.bookingDetailsPath(bookingId),
-          );
+          context.pushReplacement(RouteNames.bookingDetailsPath(bookingId));
         } else if (state is UserBookingCreateErrorStates) {
           AppSnackbar.showError(context: context, message: state.message);
         }

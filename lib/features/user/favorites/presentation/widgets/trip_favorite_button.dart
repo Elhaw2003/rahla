@@ -32,10 +32,7 @@ class TripFavoriteButton extends StatelessWidget {
     return BlocBuilder<FavoritesCubit, FavoritesStates>(
       builder: (context, state) {
         final cubit = context.read<FavoritesCubit>();
-        final isFavorite = cubit.isFavorite(
-          tripId,
-          fallback: trip.isFavorite,
-        );
+        final isFavorite = cubit.isFavorite(tripId, fallback: trip.isFavorite);
         final isToggling = cubit.isToggling(tripId);
 
         final icon = isToggling
@@ -70,16 +67,11 @@ class TripFavoriteButton extends StatelessWidget {
                 ),
                 child: icon,
               )
-            : Padding(
-                padding: padding ?? EdgeInsets.zero,
-                child: icon,
-              );
+            : Padding(padding: padding ?? EdgeInsets.zero, child: icon);
 
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: isToggling
-              ? null
-              : () => cubit.toggleFavoriteTrip(trip),
+          onTap: isToggling ? null : () => cubit.toggleFavoriteTrip(trip),
           child: child,
         );
       },

@@ -13,11 +13,7 @@ class UserBookingListCard extends StatelessWidget {
   final UserBookingModel booking;
   final VoidCallback? onTap;
 
-  const UserBookingListCard({
-    super.key,
-    required this.booking,
-    this.onTap,
-  });
+  const UserBookingListCard({super.key, required this.booking, this.onTap});
 
   String _formatPrice(num price) {
     return NumberFormat('#,###').format(price);

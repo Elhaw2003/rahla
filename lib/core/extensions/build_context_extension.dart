@@ -13,7 +13,8 @@ extension BuildContextExtension on BuildContext {
   double get screenHeight => mediaQuery.size.height;
 
   // Navigation (GoRouter wrappers)
-  void pushRoute(String location, {Object? extra}) => push(location, extra: extra);
+  void pushRoute(String location, {Object? extra}) =>
+      push(location, extra: extra);
   void goRoute(String location, {Object? extra}) => go(location, extra: extra);
   void popRoute() {
     if (canPop()) {

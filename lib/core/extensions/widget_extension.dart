@@ -3,18 +3,12 @@ import 'package:flutter/material.dart';
 extension WidgetExtension on Widget {
   /// Wraps the widget in a [Padding] widget with custom [EdgeInsetsGeometry].
   Widget padding(EdgeInsetsGeometry padding) {
-    return Padding(
-      padding: padding,
-      child: this,
-    );
+    return Padding(padding: padding, child: this);
   }
 
   /// Wraps the widget in a [Padding] widget with equal padding on all sides.
   Widget paddingAll(double value) {
-    return Padding(
-      padding: EdgeInsets.all(value),
-      child: this,
-    );
+    return Padding(padding: EdgeInsets.all(value), child: this);
   }
 
   /// Wraps the widget in a [Padding] widget with symmetric padding.
@@ -33,7 +27,12 @@ extension WidgetExtension on Widget {
     double bottom = 0.0,
   }) {
     return Padding(
-      padding: EdgeInsets.only(left: left, top: top, right: right, bottom: bottom),
+      padding: EdgeInsets.only(
+        left: left,
+        top: top,
+        right: right,
+        bottom: bottom,
+      ),
       child: this,
     );
   }
@@ -46,31 +45,28 @@ extension WidgetExtension on Widget {
     double bottom = 0.0,
   }) {
     return Padding(
-      padding: EdgeInsetsDirectional.only(start: start, top: top, end: end, bottom: bottom),
+      padding: EdgeInsetsDirectional.only(
+        start: start,
+        top: top,
+        end: end,
+        bottom: bottom,
+      ),
       child: this,
     );
   }
 
   /// Wraps the widget in a [Container] with margin.
   Widget margin(EdgeInsetsGeometry margin) {
-    return Container(
-      margin: margin,
-      child: this,
-    );
+    return Container(margin: margin, child: this);
   }
 
   /// Wraps the widget in a [Center] widget.
   Widget center() {
-    return Center(
-      child: this,
-    );
+    return Center(child: this);
   }
 
   /// Wraps the widget in an [Expanded] widget.
   Widget expanded({int flex = 1}) {
-    return Expanded(
-      flex: flex,
-      child: this,
-    );
+    return Expanded(flex: flex, child: this);
   }
 }
